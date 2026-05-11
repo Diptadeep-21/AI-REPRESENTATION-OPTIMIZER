@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "Trekking Boots",
+    "description": "Premium modern shoes for outdoor lifestyle",
+    "category": "Footwear",
+    "material": "Leather",
+    "return_policy": ""
+  },
+  {
+    "id": 2,
+    "name": "Running Shoes",
+    "description": "Lightweight waterproof running shoes for daily jogging",
+    "category": "Sports",
+    "material": "Mesh",
+    "return_policy": "7 day return available"
+  }
+]
