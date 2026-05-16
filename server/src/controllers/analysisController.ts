@@ -6,7 +6,7 @@ import Product from "../models/Product";
 
 import { asyncHandler } from "../middleware/asyncHandler";
 
-import { analyzeProduct } from "../analysis/analysisService";
+import { analyzeProduct } from "../services/analysisService";
 
 /*
  =====================================

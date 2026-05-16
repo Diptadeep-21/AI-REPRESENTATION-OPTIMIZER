@@ -1,14 +1,35 @@
 from fastapi import APIRouter
 
-from app.models.schemas import AnalyzeRequest
-from app.agents.audit_agent import run_audit
+from app.models.schemas import (
+    AnalyzeRequest,
+    AnalyzeResponse
+)
+
+from app.agents.audit_agent import (
+    run_audit
+)
 
 router = APIRouter()
 
 
-@router.post("/analyze")
+@router.post(
+    "/analyze",
+    response_model=AnalyzeResponse
+)
 def analyze(data: AnalyzeRequest):
 
-    result = run_audit(data.query)
+    result = run_audit({
+        "product":
+            data.product,
+
+        "scores":
+            data.scores,
+
+        "issues":
+            data.issues,
+
+        "recommendations":
+            data.recommendations,
+    })
 
     return result

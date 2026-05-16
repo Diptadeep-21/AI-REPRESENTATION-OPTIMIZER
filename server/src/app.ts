@@ -16,6 +16,8 @@ import ingestionRoutes from "./routes/ingestionRoutes";
 
 import analysisRoutes from "./routes/analysisRoutes";
 
+import simulationRoutes from "./routes/simulationRoutes";
+
 dotenv.config();
 
 connectDB();
@@ -38,6 +40,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/stores", storeRoutes);
 
 app.use("/api/dashboard", dashboardRoutes);
+
+app.use("/api/simulation", simulationRoutes);
 
 app.use(errorHandler);
 

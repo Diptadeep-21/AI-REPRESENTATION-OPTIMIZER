@@ -1,10 +1,20 @@
 import Product from "../models/Product";
+
 import Analysis from "../models/Analysis";
+
 import Store from "../models/Store";
 
 export const getDashboardOverviewService =
   async () => {
-    const totalStores = await Store.countDocuments();
+
+    /*
+     =====================================
+     BASIC COUNTS
+     =====================================
+    */
+
+    const totalStores =
+      await Store.countDocuments();
 
     const totalProducts =
       await Product.countDocuments();
@@ -12,7 +22,20 @@ export const getDashboardOverviewService =
     const totalAnalyses =
       await Analysis.countDocuments();
 
-    const analyses = await Analysis.find();
+    /*
+     =====================================
+     FETCH ANALYSES
+     =====================================
+    */
+
+    const analyses =
+      await Analysis.find();
+
+    /*
+     =====================================
+     SCORE AGGREGATION
+     =====================================
+    */
 
     let averageSemanticScore = 0;
 
@@ -20,42 +43,81 @@ export const getDashboardOverviewService =
 
     let averageDiscoverabilityScore = 0;
 
+    let averageOverallScore = 0;
+
     if (analyses.length > 0) {
+
       averageSemanticScore =
         analyses.reduce(
-          (acc, curr) => acc + curr.semanticScore,
+          (acc, curr) =>
+            acc +
+            curr.scores
+              .semanticScore,
           0
         ) / analyses.length;
 
       averageTrustScore =
         analyses.reduce(
-          (acc, curr) => acc + curr.trustScore,
+          (acc, curr) =>
+            acc +
+            curr.scores
+              .trustScore,
           0
         ) / analyses.length;
 
       averageDiscoverabilityScore =
         analyses.reduce(
           (acc, curr) =>
-            acc + curr.discoverabilityScore,
+            acc +
+            curr.scores
+              .discoverabilityScore,
+          0
+        ) / analyses.length;
+
+      averageOverallScore =
+        analyses.reduce(
+          (acc, curr) =>
+            acc +
+            curr.scores
+              .overallScore,
           0
         ) / analyses.length;
     }
 
+    /*
+     =====================================
+     FINAL RESPONSE
+     =====================================
+    */
+
     return {
+
       totalStores,
+
       totalProducts,
+
       totalAnalyses,
 
       scores: {
+
         semanticScore:
-          Math.round(averageSemanticScore),
+          Math.round(
+            averageSemanticScore
+          ),
 
         trustScore:
-          Math.round(averageTrustScore),
+          Math.round(
+            averageTrustScore
+          ),
 
         discoverabilityScore:
           Math.round(
             averageDiscoverabilityScore
+          ),
+
+        overallScore:
+          Math.round(
+            averageOverallScore
           ),
       },
     };

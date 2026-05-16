@@ -1,93 +1,148 @@
-from app.services.retrieval_service import (
-    retrieve_products
-)
+def run_audit(data):
 
-from app.evaluators.metadata_quality import (
-    evaluate_metadata_quality
-)
+    product = data["product"]
 
-from app.evaluators.discoverability import (
-    evaluate_discoverability
-)
+    scores = data["scores"]
 
-from app.evaluators.trust_signal import (
-    evaluate_trust_signal
-)
+    issues = data["issues"]
 
-from app.services.scoring_service import (
-    generate_scores
-)
-
-
-def run_audit(query):
-
-    products = retrieve_products(query)
-
-    product = products[0]
-
-    metadata_result = (
-        evaluate_metadata_quality(product)
+    recommendations = (
+        data["recommendations"]
     )
 
-    discoverability_result = (
-        evaluate_discoverability(product)
+    title = product.get(
+        "title", ""
     )
 
-    trust_result = (
-        evaluate_trust_signal(product)
+    description = product.get(
+        "description", ""
     )
 
-    semantic_score = 60
-    media_score = 80
-
-    deterministic_scores = generate_scores(
-
-        metadata_result["score"],
-
-        discoverability_result["score"],
-
-        trust_result["score"],
-
-        semantic_score,
-
-        media_score
+    tags = product.get(
+        "tags", []
     )
 
-    issues = []
-
-    issues.extend(
-        metadata_result["issues"]
+    overall_score = scores.get(
+        "overallScore", 0
     )
 
-    issues.extend(
-        discoverability_result["issues"]
+    """
+    =====================================
+    AI VISIBILITY PREDICTION
+    =====================================
+    """
+
+    visibility_prediction = {
+
+        "chatgpt":
+            "High"
+            if overall_score > 80
+            else "Medium",
+
+        "perplexity":
+            "Medium"
+            if overall_score > 60
+            else "Low",
+
+        "amazonRufus":
+            "Medium"
+    }
+
+    """
+    =====================================
+    SEMANTIC GAP DETECTION
+    =====================================
+    """
+
+    semantic_gaps = []
+
+    important_terms = [
+        "waterproof",
+        "durable",
+        "lightweight",
+        "outdoor",
+        "premium",
+        "trail"
+    ]
+
+    combined_text = (
+        title.lower()
+        + " "
+        + description.lower()
     )
 
-    issues.extend(
-        trust_result["issues"]
+    for term in important_terms:
+
+        if term not in combined_text:
+
+            semantic_gaps.append(term)
+
+    """
+    =====================================
+    OPTIMIZED TITLE
+    =====================================
+    """
+
+    optimized_title = (
+        f"Premium {title} "
+        f"for Outdoor Adventures"
     )
 
-    recommendations = []
+    """
+    =====================================
+    OPTIMIZED DESCRIPTION
+    =====================================
+    """
 
-    if "Insufficient semantic tags" in issues:
+    optimized_description = (
+        description
+        + " Optimized for AI shopping "
+        + "assistant discoverability "
+        + "and semantic retrieval."
+    )
 
-        recommendations.append(
-            "Add semantic tags"
-        )
+    """
+    =====================================
+    AI SUMMARY
+    =====================================
+    """
 
-    recommendations.append(
-        "Upload more images"
+    summary = (
+        "This product demonstrates "
+        "moderate AI discoverability "
+        "but lacks sufficient semantic "
+        "richness for strong AI-agent "
+        "ranking."
+    )
+
+    """
+    =====================================
+    IMPROVEMENT PRIORITY
+    =====================================
+    """
+
+    improvement_priority = (
+        "HIGH"
+        if overall_score < 75
+        else "MEDIUM"
     )
 
     return {
 
-        "product": product,
+        "summary": summary,
 
-        "deterministicScores":
-            deterministic_scores,
+        "visibilityPrediction":
+            visibility_prediction,
 
-        "issues": issues,
+        "optimizedTitle":
+            optimized_title,
 
-        "recommendations":
-            recommendations
+        "optimizedDescription":
+            optimized_description,
+
+        "semanticGaps":
+            semantic_gaps,
+
+        "improvementPriority":
+            improvement_priority,
     }

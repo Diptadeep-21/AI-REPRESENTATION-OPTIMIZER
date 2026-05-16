@@ -1,0 +1,35 @@
+Merchant Shopify Store
+        ↓
+Shopify APIs
+        ↓
+Node.js Backend (Express + TypeScript)
+        ↓
+Data Ingestion Layer
+        ↓
+Data Normalization & Preprocessing
+        ↓
+MongoDB Product Storage
+        ↓
+Deterministic Intelligence Engine
+        ↓
+Issue Detection Engine
+        ↓
+Recommendation Engine
+        ↓
+AI Orchestration Service
+        ↓
+FastAPI AI Engine
+        ↓
+Semantic AI Reasoning
+        ↓
+AI Optimization Generation
+        ↓
+Hybrid Intelligence Response
+        ↓
+MongoDB Analysis Storage
+        ↓
+Node.js API Layer
+        ↓
+Next.js Frontend Dashboard
+        ↓
+Merchant Insights & AI Simulations

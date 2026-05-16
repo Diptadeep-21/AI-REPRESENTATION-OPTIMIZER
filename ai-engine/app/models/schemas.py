@@ -1,25 +1,42 @@
 from pydantic import BaseModel
-from typing import List, Dict
+
+from typing import List, Dict, Any
 
 
 class Product(BaseModel):
+
     title: str
+
     description: str
+
     tags: List[str]
+
     category: str
-    price: int
+
+    price: float
 
 
-class AnalyzeResponse(BaseModel):
+class AnalyzeRequest(BaseModel):
 
-    product: Dict
+    product: Dict[str, Any]
 
-    deterministicScores: Dict
+    scores: Dict[str, Any]
 
     issues: List[str]
 
     recommendations: List[str]
 
 
-class AnalyzeRequest(BaseModel):
-    query: str
+class AnalyzeResponse(BaseModel):
+
+    summary: str
+
+    visibilityPrediction: Dict[str, str]
+
+    optimizedTitle: str
+
+    optimizedDescription: str
+
+    semanticGaps: List[str]
+
+    improvementPriority: str
