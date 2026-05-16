@@ -12,6 +12,10 @@ import storeRoutes from "./routes/storeRoutes";
 
 import dashboardRoutes from "./routes/dashboardRoutes";
 
+import ingestionRoutes from "./routes/ingestionRoutes";
+
+import analysisRoutes from "./routes/analysisRoutes";
+
 dotenv.config();
 
 connectDB();
@@ -36,6 +40,13 @@ app.use("/api/stores", storeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.use(errorHandler);
+
+app.use("/api/ingestion", ingestionRoutes);
+
+app.use(
+  "/api/analysis",
+  analysisRoutes
+);
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,0 +1,13 @@
+Shopify Store
+      ↓
+Ingestion Pipeline
+      ↓
+Normalization Engine
+      ↓
+MongoDB
+      ↓
+Deterministic Analysis Engine
+      ↓
+AI Enhancement Layer
+      ↓
+Dashboard + Simulations

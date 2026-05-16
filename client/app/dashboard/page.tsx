@@ -1,6 +1,8 @@
 "use client";
+
+import { useQuery } from "@tanstack/react-query";
 import ScoreCard from "@/components/dashboard/ScoreCard";
-import { dashboardData } from "@/lib/mockData";
+import { getDashboardOverview } from "@/services/dashboardService";
 
 const SEV_CONFIG = {
   critical: { label: "Critical", dot: "#f0683a", bg: "rgba(240,104,58,0.10)", text: "#f0683a" },
@@ -15,7 +17,6 @@ const STATUS_CONFIG = {
   bad:   { color: "#f0683a", label: "Poor" },
 };
 
-// Tiny inline sparkline SVG
 function Sparkline({ data }: { data: { day: string; score: number }[] }) {
   const W = 160, H = 48, pad = 6;
   const min = Math.min(...data.map((d) => d.score)) - 5;
@@ -40,18 +41,67 @@ function Sparkline({ data }: { data: { day: string; score: number }[] }) {
 }
 
 export default function DashboardPage() {
-  const {
-    aiReadinessScore = 0,
-    discoverabilityScore = 0,
-    trustScore = 0,
-    comparisonScore = 0,
-    weeklyDeltas = { aiReadiness: 0, discoverability: 0, trust: 0, comparison: 0 },
-    issueBreakdown = [],
-    recentIssues = [],
-    weeklyTrend = [],
-    topProducts = [],
-  } = dashboardData ?? {};
+  const { data, isLoading } = useQuery({
+    queryKey: ["dashboard-overview"],
+    queryFn: getDashboardOverview,
+  });
+
+  // ── Scores from backend ──────────────────────────────────────────────────
+  const aiReadinessScore     = data?.scores?.semanticScore        || 0;
+  const discoverabilityScore = data?.scores?.discoverabilityScore || 0;
+  const trustScore           = data?.scores?.trustScore           || 0;
+  const comparisonScore      = Math.round(
+    (aiReadinessScore + discoverabilityScore + trustScore) / 3
+  ) || 0;
+
+  const totalStores   = data?.totalStores   || 0;
+  const totalProducts = data?.totalProducts || 0;
+
+  // ── Temporary frontend intelligence (until analysis engine ships) ────────
+  const weeklyDeltas = {
+    aiReadiness:     12,
+    discoverability:  8,
+    trust:            5,
+    comparison:       7,
+  };
+
+  const issueBreakdown = [
+    { category: "Metadata", score: 82, issues: 4,  color: "#4d7aff" },
+    { category: "Trust",    score: 71, issues: 7,  color: "#f5b429" },
+    { category: "Schema",   score: 58, issues: 11, color: "#f0683a" },
+  ];
+
+  const recentIssues = [
+    { id: 1, severity: "critical", product: "Waterproof Hiking Shoes",  issue: "Missing structured metadata",    action: "Fix Now"  },
+    { id: 2, severity: "warning",  product: "Trail Running Backpack",   issue: "Weak AI discoverability",        action: "Optimize" },
+  ];
+
+  const weeklyTrend = [
+    { day: "Mon", score: 58 },
+    { day: "Tue", score: 61 },
+    { day: "Wed", score: 64 },
+    { day: "Thu", score: 67 },
+    { day: "Fri", score: 72 },
+    { day: "Sat", score: 76 },
+    { day: "Sun", score: aiReadinessScore },
+  ];
+
+  const topProducts = [
+    { name: "Waterproof Hiking Shoes", score: 91, status: "great" },
+    { name: "Trail Running Backpack",  score: 82, status: "good"  },
+    { name: "Thermal Winter Jacket",   score: 69, status: "warn"  },
+  ];
+
   const criticalCount = recentIssues.filter((i) => i.severity === "critical").length;
+
+  // ── Loading state ────────────────────────────────────────────────────────
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#04070f] text-white">
+        Loading dashboard...
+      </div>
+    );
+  }
 
   return (
     <>
@@ -171,6 +221,22 @@ export default function DashboardPage() {
         .alert-text { color: #f0683a; font-weight: 500; }
         .alert-sub { color: #64748b; margin-left: 4px; font-weight: 400; }
         .alert-action { margin-left: auto; font-size: 12px; color: #f0683a; font-weight: 500; cursor: pointer; white-space: nowrap; text-decoration: underline; }
+
+        /* Store stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .stat-card {
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.07);
+          background: #0b1120;
+          padding: 24px;
+        }
+        .stat-label { font-size: 13px; color: #64748b; }
+        .stat-value {
+          margin-top: 14px;
+          font-family: 'Syne', sans-serif;
+          font-size: 36px; font-weight: 800;
+          letter-spacing: -0.04em; color: #e8edf5;
+        }
 
         /* Score cards grid */
         .scores-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
@@ -294,9 +360,7 @@ export default function DashboardPage() {
               ))}
 
               <div className="nav-section-label" style={{ marginTop: 8 }}>Account</div>
-              {[
-                { icon: "⚙", label: "Settings" },
-              ].map(({ icon, label }) => (
+              {[{ icon: "⚙", label: "Settings" }].map(({ icon, label }) => (
                 <a key={label} href="#" className="nav-item">
                   <span className="nav-icon">{icon}</span>
                   {label}
@@ -314,12 +378,8 @@ export default function DashboardPage() {
                 <div className="topbar-sub">Last synced · just now &nbsp;·&nbsp; your-store.myshopify.com</div>
               </div>
               <div className="topbar-right">
-                <button className="btn-sm outline">
-                  <span>↺</span> Re-scan
-                </button>
-                <button className="btn-sm primary">
-                  Export Report
-                </button>
+                <button className="btn-sm outline"><span>↺</span> Re-scan</button>
+                <button className="btn-sm primary">Export Report</button>
               </div>
             </header>
 
@@ -331,6 +391,18 @@ export default function DashboardPage() {
                 <span className="alert-text">{criticalCount} critical issues</span>
                 <span className="alert-sub">require immediate attention to restore AI visibility.</span>
                 <span className="alert-action">View all →</span>
+              </div>
+
+              {/* Store stats — live from backend */}
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <p className="stat-label">Total Stores</p>
+                  <h2 className="stat-value">{totalStores}</h2>
+                </div>
+                <div className="stat-card">
+                  <p className="stat-label">Total Products</p>
+                  <h2 className="stat-value">{totalProducts}</h2>
+                </div>
               </div>
 
               {/* Score cards */}
@@ -362,12 +434,7 @@ export default function DashboardPage() {
                         const cfg = SEV_CONFIG[issue.severity as keyof typeof SEV_CONFIG];
                         return (
                           <div className="issue-row" key={issue.id}>
-                            <div
-                              className="issue-sev"
-                              style={{ background: cfg.bg, color: cfg.text }}
-                            >
-                              {cfg.label}
-                            </div>
+                            <div className="issue-sev" style={{ background: cfg.bg, color: cfg.text }}>{cfg.label}</div>
                             <div className="issue-info">
                               <div className="issue-product">{issue.product}</div>
                               <div className="issue-desc">{issue.issue}</div>
@@ -383,7 +450,7 @@ export default function DashboardPage() {
                 {/* Right column */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
-                  {/* Sparkline / weekly trend */}
+                  {/* Weekly trend */}
                   <div>
                     <div className="section-hd">
                       <div className="section-title">Weekly Trend</div>
@@ -448,10 +515,7 @@ export default function DashboardPage() {
                             <span className="product-rank">#{i + 1}</span>
                             <span className="product-name">{name}</span>
                             <span className="product-score" style={{ color: cfg.color }}>{score}</span>
-                            <span
-                              className="product-status"
-                              style={{ background: `${cfg.color}18`, color: cfg.color }}
-                            >
+                            <span className="product-status" style={{ background: `${cfg.color}18`, color: cfg.color }}>
                               {cfg.label}
                             </span>
                           </div>
