@@ -1,19 +1,37 @@
-def generate_scores(issues):
+def generate_scores(
 
-    base_score = 100
+    metadata_score,
+    discoverability_score,
+    trust_score,
+    semantic_score,
+    media_score
 
-    for issue in issues:
+):
 
-        severity = issue["severity"]
+    overall = int(
 
-        if severity == "high":
-            base_score -= 20
+        (
+            metadata_score +
+            discoverability_score +
+            trust_score +
+            semantic_score +
+            media_score
 
-        elif severity == "medium":
-            base_score -= 10
-
-    base_score = max(base_score, 0)
+        ) / 5
+    )
 
     return {
-        "ai_readiness": base_score
+
+        "metadataScore": metadata_score,
+
+        "discoverabilityScore":
+            discoverability_score,
+
+        "trustScore": trust_score,
+
+        "mediaScore": media_score,
+
+        "semanticScore": semantic_score,
+
+        "overallScore": overall
     }

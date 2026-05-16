@@ -1,38 +1,93 @@
-from app.services.retrieval_service import retrieve_products
-from app.services.evaluation_service import run_evaluations
-from app.services.scoring_service import generate_scores
+from app.services.retrieval_service import (
+    retrieve_products
+)
+
+from app.evaluators.metadata_quality import (
+    evaluate_metadata_quality
+)
+
+from app.evaluators.discoverability import (
+    evaluate_discoverability
+)
+
+from app.evaluators.trust_signal import (
+    evaluate_trust_signal
+)
+
+from app.services.scoring_service import (
+    generate_scores
+)
 
 
 def run_audit(query):
 
     products = retrieve_products(query)
 
-    issues = run_evaluations(query, products)
+    product = products[0]
 
-    scores = generate_scores(issues)
+    metadata_result = (
+        evaluate_metadata_quality(product)
+    )
+
+    discoverability_result = (
+        evaluate_discoverability(product)
+    )
+
+    trust_result = (
+        evaluate_trust_signal(product)
+    )
+
+    semantic_score = 60
+    media_score = 80
+
+    deterministic_scores = generate_scores(
+
+        metadata_result["score"],
+
+        discoverability_result["score"],
+
+        trust_result["score"],
+
+        semantic_score,
+
+        media_score
+    )
+
+    issues = []
+
+    issues.extend(
+        metadata_result["issues"]
+    )
+
+    issues.extend(
+        discoverability_result["issues"]
+    )
+
+    issues.extend(
+        trust_result["issues"]
+    )
 
     recommendations = []
 
-    for issue in issues:
+    if "Insufficient semantic tags" in issues:
 
-        if issue["type"] == "vague_description":
-            recommendations.append(
-                "Add specific material and use-case details"
-            )
+        recommendations.append(
+            "Add semantic tags"
+        )
 
-        if issue["type"] == "missing_return_policy":
-            recommendations.append(
-                "Add clear return policy information"
-            )
-
-        if issue["type"] == "low_discoverability":
-            recommendations.append(
-                "Improve semantic relevance of product descriptions"
-            )
+    recommendations.append(
+        "Upload more images"
+    )
 
     return {
-        "scores": scores,
+
+        "product": product,
+
+        "deterministicScores":
+            deterministic_scores,
+
         "issues": issues,
-        "recommendations": list(set(recommendations)),
-        "retrieved_products": products
+
+        "recommendations":
+            recommendations
     }

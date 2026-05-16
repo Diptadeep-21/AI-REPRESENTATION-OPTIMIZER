@@ -1,8 +1,27 @@
-from app.agents.audit_agent import run_audit
+def evaluate_metadata_quality(product):
 
+    score = 100
 
-def run_audit_pipeline(query):
+    issues = []
 
-    result = run_audit(query)
+    required_fields = [
+        "title",
+        "description",
+        "tags",
+        "category"
+    ]
 
-    return result
+    for field in required_fields:
+
+        if not product.get(field):
+
+            score -= 20
+
+            issues.append(
+                f"Missing metadata field: {field}"
+            )
+
+    return {
+        "score": score,
+        "issues": issues
+    }

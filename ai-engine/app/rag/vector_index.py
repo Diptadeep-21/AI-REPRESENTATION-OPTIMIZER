@@ -7,7 +7,17 @@ from app.services.embedding_service import generate_embedding
 with open("data/sample_store.json", "r") as f:
     products = json.load(f)
 
-texts = [p["description"] for p in products]
+texts = [
+
+    f"""
+    Title: {p['title']}
+    Description: {p['description']}
+    Tags: {' '.join(p['tags'])}
+    Category: {p['category']}
+    """
+
+    for p in products
+]
 
 embeddings = np.array(
     [generate_embedding(text) for text in texts]

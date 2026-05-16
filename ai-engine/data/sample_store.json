@@ -1,18 +1,154 @@
 [
   {
-    "id": 1,
-    "name": "Trekking Boots",
-    "description": "Premium modern shoes for outdoor lifestyle",
+    "title": "Mountain Trail Hiking Boots",
+    "description": "Durable outdoor hiking boots.",
+    "tags": ["hiking", "outdoor"],
     "category": "Footwear",
-    "material": "Leather",
-    "return_policy": ""
+    "price": 89,
+    "return_policy": "7 day return"
   },
   {
-    "id": 2,
-    "name": "Running Shoes",
-    "description": "Lightweight waterproof running shoes for daily jogging",
-    "category": "Sports",
-    "material": "Mesh",
-    "return_policy": "7 day return available"
-  }
+    "title": "Wireless Bluetooth Headphones",
+    "description": "Noise-cancelling over-ear headphones.",
+    "tags": ["electronics", "audio"],
+    "category": "Electronics",
+    "price": 199,
+    "return_policy": "30 day return"
+  },
+  {
+    "title": "Organic Cotton T-Shirt",
+    "description": "Soft and eco-friendly t-shirt.",
+    "tags": ["clothing", "organic"],
+    "category": "Apparel",
+    "price": 25,
+    "return_policy": "14 day return"
+  },
+  {
+    "title": "Stainless Steel Water Bottle",
+    "description": "Insulated water bottle keeps drinks cold.",
+    "tags": ["kitchen", "outdoor"],
+    "category": "Home & Kitchen",
+    "price": 30,
+    "return_policy": "15 day return"
+  },
+  {
+    "title": "Yoga Mat with Carrying Strap",
+    "description": "Non-slip yoga mat for all types of yoga.",
+    "tags": ["fitness", "yoga"],
+    "category": "Sports & Outdoors",
+    "price": 45,
+    "return_policy": "20 day return"
+  },
+  {
+    "title": "Smart LED Desk Lamp",
+    "description": "Adjustable brightness and color temperature.",
+    "tags": ["electronics", "home"],
+    "category": "Home & Office",
+    "price": 60,
+    "return_policy": "30 day return"
+  },
+  {
+    "title": "Portable Bluetooth Speaker",
+    "description": "Compact speaker with powerful sound.",
+    "tags": ["electronics", "audio"],
+    "category": "Electronics",
+    "price": 75,
+    "return_policy": "30 day return"
+  },
+  {
+    "title": "Eco-Friendly Bamboo Toothbrush",
+    "description": "Sustainable toothbrush made from bamboo.",
+    "tags": ["personal care", "eco-friendly"],
+    "category": "Health & Personal Care",
+    "price": 10,
+    "return_policy": "14 day return"
+  },
+  {
+    "title": "Adjustable Dumbbells Set",
+    "description": "Space-saving dumbbells for strength training.",
+    "tags": ["fitness", "strength training"],
+    "category": "Sports & Outdoors",
+    "price": 150,
+    "return_policy": "30 day return"
+  },
+  {
+  "title": "Gaming Beast Laptop",
+  "description": "High performance gaming laptop with RTX graphics, Intel processor, 16GB RAM, RGB keyboard, and advanced cooling.",
+  "tags": ["gaming", "laptop", "RTX", "computer", "high performance"],
+  "category": "Electronics",
+  "price": 1499,
+  "return_policy": "14 day return"
+},
+{
+  "title": "Ultra HD 4K Monitor",
+  "description": "27-inch 4K monitor with HDR support and ultra-thin bezels.",
+  "tags": ["monitor", "4K", "HDR", "electronics", "display"],
+  "category": "Electronics",
+  "price": 399,
+  "return_policy": "30 day return"
+},
+{
+  "title": "Mechanical Gaming Keyboard",
+  "description": "RGB backlit mechanical keyboard with customizable keys and anti-ghosting.",
+  "tags": ["keyboard", "gaming", "mechanical", "RGB", "electronics"],
+  "category": "Electronics",
+  "price": 129,
+  "return_policy": "14 day return"
+},
+{
+  "title": "Wireless Gaming Mouse",
+  "description": "Ergonomic wireless mouse with adjustable DPI and long battery life.",
+  "tags": ["mouse", "gaming", "wireless", "electronics", "peripheral"],
+  "category": "Electronics",
+  "price": 79,
+  "return_policy": "30 day return"
+},
+{
+  "title": "Gaming Headset with Surround Sound",
+  "description": "Comfortable gaming headset with 7.1 surround sound and noise-cancelling microphone.",
+  "tags": ["headset", "gaming", "surround sound", "electronics", "audio"],
+  "category": "Electronics",
+  "price": 89,
+  "return_policy": "14 day return"
+},
+{
+  "title": "RGB Gaming Chair",
+  "description": "Ergonomic gaming chair with adjustable height and RGB lighting.",
+  "tags": ["gaming chair", "ergonomic", "RGB", "furniture", "gaming"],
+  "category": "Furniture",
+  "price": 199,
+  "return_policy": "30 day return"
+},
+{
+  "title": "Gaming Console Bundle",
+  "description": "Latest gaming console with two controllers and a selection of games.",
+  "tags": ["gaming console", "bundle", "electronics", "gaming"],
+  "category": "Electronics",
+  "price": 499,
+  "return_policy": "14 day return"
+},
+{
+  "title": "High-Speed Gaming Router",
+  "description": "Gaming router with low latency and advanced QoS for optimal gaming performance.",
+  "tags": ["router", "gaming", "networking", "electronics"],
+  "category": "Electronics",
+  "price": 149,
+  "return_policy": "30 day return"
+},
+{
+  "title": "Mobile ",
+  "description": "Latest smartphone with high-resolution display, powerful processor, and advanced camera system.",
+  "tags": ["smartphone", "mobile", "electronics", "camera", "display"],
+  "category": "Electronics",
+  "price": 999,
+  "return_policy": "14 day return"
+},
+{
+  "title": "Laptop Stand with Cooling Fan",
+  "description": "Adjustable laptop stand with built-in cooling fan to prevent overheating during gaming sessions.",
+  "tags": ["laptop stand", "cooling fan", "gaming accessory", "electronics"],
+  "category": "Electronics",
+  "price": 49,
+  "return_policy": "30 day return"
+}
 ]
