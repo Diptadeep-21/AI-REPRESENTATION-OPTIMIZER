@@ -93,22 +93,35 @@ export const analyzeProduct =
         );
 
         const analysis =
-            await Analysis.create({
+            await Analysis.findOneAndUpdate(
 
-                productId:
-                    product._id,
+                {
+                    productId:
+                        product._id,
+                },
 
-                scores,
+                {
+                    productId:
+                        product._id,
 
-                issues,
+                    scores,
 
-                recommendations,
+                    issues,
 
-                aiInsights,
+                    recommendations,
 
-                analyzedAt:
-                    new Date(),
-            });
+                    aiInsights,
+
+                    analyzedAt:
+                        new Date(),
+                },
+
+                {
+                    upsert: true,
+
+                    new: true,
+                }
+            );
 
         return analysis;
     };

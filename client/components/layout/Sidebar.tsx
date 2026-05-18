@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getAllAnalyses } from "@/lib/api/analysis";
 import {
   LayoutDashboard,
   Brain,
@@ -9,18 +11,30 @@ import {
   FileText,
   Settings,
   ChevronRight,
+  Lightbulb,
 } from "lucide-react";
 
 const links = [
-  { title: "Overview",    href: "/dashboard",   icon: LayoutDashboard, section: "main" },
-  { title: "AI Visibility", href: "/analysis",  icon: Brain,           section: "main" },
-  { title: "Simulation",  href: "/simulation",  icon: Sparkles,        section: "analyse" },
-  { title: "Reports",     href: "/reports",     icon: FileText,        section: "analyse" },
-  { title: "Settings",    href: "/settings",    icon: Settings,        section: "account" },
+  { title: "Overview",      href: "/dashboard",   icon: LayoutDashboard, section: "main" },
+  { title: "AI Visibility", href: "/analysis",    icon: Brain,           section: "main" },
+  { title: "Products",      href: "/products",    icon: Sparkles,        section: "main",    showBadge: true },
+  { title: "Recommendations", href: "/recommendations", icon: Lightbulb,     section: "analyse" },
+  { title: "Simulation",    href: "/simulation",  icon: Sparkles,        section: "analyse" },
+  { title: "Reports",       href: "/reports",     icon: FileText,        section: "analyse" },
+  { title: "Settings",      href: "/settings",    icon: Settings,        section: "account" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  // Derive critical count from real analyses for the Products badge
+  const { data: analyses } = useQuery({
+    queryKey: ["analyses"],
+    queryFn: getAllAnalyses,
+  });
+
+  const criticalCount =
+    analyses?.filter((a: any) => a.scores?.overallScore < 60).length ?? 0;
 
   const mainLinks    = links.filter((l) => l.section === "main");
   const analyseLinks = links.filter((l) => l.section === "analyse");
@@ -29,6 +43,8 @@ export default function Sidebar() {
   const NavItem = ({ link }: { link: (typeof links)[0] }) => {
     const Icon = link.icon;
     const active = pathname === link.href || pathname.startsWith(link.href + "/");
+    const badge = link.showBadge && criticalCount > 0 ? criticalCount : null;
+
     return (
       <Link
         href={link.href}
@@ -58,7 +74,17 @@ export default function Sidebar() {
       >
         <Icon size={15} style={{ flexShrink: 0 }} />
         <span style={{ flex: 1 }}>{link.title}</span>
-        {active && <ChevronRight size={12} style={{ opacity: 0.5 }} />}
+        {badge !== null && (
+          <span style={{
+            background: "rgba(240,104,58,0.15)",
+            color: "#f0683a",
+            fontSize: 10, fontWeight: 600,
+            padding: "2px 6px", borderRadius: 100,
+          }}>
+            {badge}
+          </span>
+        )}
+        {active && !badge && <ChevronRight size={12} style={{ opacity: 0.5 }} />}
       </Link>
     );
   };
@@ -157,6 +183,7 @@ export default function Sidebar() {
           {accountLinks.map((l) => <NavItem key={l.href} link={l} />)}
         </nav>
 
+        {/* Store chip — shows active store with live status dot */}
         <div className="sidebar-footer">
           <div className="store-chip">
             <div className="store-avatar" />

@@ -1,11 +1,39 @@
 import axios from "axios";
 
+import Analysis
+from "../models/Analysis";
+
 export const runSimulation =
-  async (query: string) => {
+  async ({
+    query,
+    product,
+    agent,
+  }: {
+    query: string;
+
+    product: string;
+
+    agent: string;
+  }) => {
 
     /*
      =====================================
-     CALL FASTAPI SIMULATION
+     FIND PRODUCT ANALYSIS
+     =====================================
+    */
+
+    const analysis =
+      await Analysis.findOne({
+
+        productId:
+          product,
+      })
+
+      .populate("productId");
+
+    /*
+     =====================================
+     FASTAPI CALL
      =====================================
     */
 
@@ -13,7 +41,12 @@ export const runSimulation =
       await axios.post(
         "http://localhost:8000/simulate",
         {
+
           query,
+
+          agent,
+
+          analysis,
         }
       );
 

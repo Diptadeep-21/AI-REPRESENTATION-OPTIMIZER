@@ -1,13 +1,13 @@
 import { Request, Response }
-from "express";
+  from "express";
 
 import { asyncHandler }
-from "../middleware/asyncHandler";
+  from "../middleware/asyncHandler";
 
 import {
   runSimulation
 }
-from "../services/simulationService";
+  from "../services/simulationService";
 
 /*
  =====================================
@@ -22,8 +22,11 @@ export const simulateQuery =
       res: Response
     ) => {
 
-      const { query } =
-        req.body;
+      const {
+        query,
+        product,
+        agent,
+      } = req.body;
 
       if (!query) {
         return res.status(400).json({
@@ -35,9 +38,11 @@ export const simulateQuery =
       }
 
       const result =
-        await runSimulation(
-          query
-        );
+        await runSimulation({
+          query,
+          product,
+          agent,
+        });
 
       res.status(200).json({
         success: true,

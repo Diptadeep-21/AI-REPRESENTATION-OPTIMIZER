@@ -18,6 +18,10 @@ import analysisRoutes from "./routes/analysisRoutes";
 
 import simulationRoutes from "./routes/simulationRoutes";
 
+import productIntelligenceRoutes from "./routes/productIntelligenceRoutes";
+
+import reportRoutes from "./routes/reportRoutes";
+
 dotenv.config();
 
 connectDB();
@@ -50,6 +54,16 @@ app.use("/api/ingestion", ingestionRoutes);
 app.use(
   "/api/analysis",
   analysisRoutes
+);
+
+app.use(
+  "/api/products",
+  productIntelligenceRoutes
+);
+
+app.use(
+  "/api/reports",
+  reportRoutes
 );
 
 const PORT = process.env.PORT || 5000;

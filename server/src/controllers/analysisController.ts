@@ -1,12 +1,19 @@
-import { Request, Response } from "express";
+import { Request, Response }
+from "express";
 
-import Analysis from "../models/Analysis";
+import Analysis
+from "../models/Analysis";
 
-import Product from "../models/Product";
+import Product
+from "../models/Product";
 
-import { asyncHandler } from "../middleware/asyncHandler";
+import { asyncHandler }
+from "../middleware/asyncHandler";
 
-import { analyzeProduct } from "../services/analysisService";
+import {
+  analyzeProduct,
+}
+from "../services/analysisService";
 
 /*
  =====================================
@@ -20,6 +27,7 @@ export const runProductAnalysis =
       req: Request,
       res: Response
     ) => {
+
       const productId =
         req.params
           .productId as string;
@@ -30,12 +38,70 @@ export const runProductAnalysis =
         );
 
       res.status(200).json({
+
         success: true,
 
         message:
           "Product analyzed successfully",
 
         data: analysis,
+      });
+    }
+  );
+
+/*
+ =====================================
+ RUN ANALYSIS FOR ALL PRODUCTS
+ =====================================
+*/
+
+export const runAllProductAnalyses =
+  asyncHandler(
+    async (
+      _req: Request,
+      res: Response
+    ) => {
+
+      const products =
+        await Product.find();
+
+      const results = [];
+
+      for (const product of products) {
+
+        try {
+
+          const analysis =
+            await analyzeProduct(
+              product._id.toString()
+            );
+
+          results.push(
+            analysis
+          );
+
+        } catch (error) {
+
+          console.error(
+
+            `Failed to analyze ${product.title}`,
+
+            error
+          );
+        }
+      }
+
+      res.status(200).json({
+
+        success: true,
+
+        message:
+          "All products analyzed successfully",
+
+        total:
+          results.length,
+
+        data: results,
       });
     }
   );
@@ -52,6 +118,7 @@ export const getProductAnalysis =
       req: Request,
       res: Response
     ) => {
+
       const productId =
         req.params
           .productId as string;
@@ -59,12 +126,18 @@ export const getProductAnalysis =
       const analysis =
         await Analysis.findOne({
           productId,
-        }).sort({
+        })
+
+        .populate("productId")
+
+        .sort({
           createdAt: -1,
         });
 
       if (!analysis) {
+
         return res.status(404).json({
+
           success: false,
 
           message:
@@ -73,6 +146,7 @@ export const getProductAnalysis =
       }
 
       res.status(200).json({
+
         success: true,
 
         data: analysis,
@@ -92,6 +166,7 @@ export const getStoreOverview =
       _req: Request,
       res: Response
     ) => {
+
       const totalProducts =
         await Product.countDocuments();
 
@@ -103,19 +178,25 @@ export const getStoreOverview =
 
       const averageScore =
         totalAnalyses > 0
+
           ? analyses.reduce(
               (acc, item) =>
+
                 acc +
                 item.scores
                   .overallScore,
+
               0
             ) / totalAnalyses
+
           : 0;
 
       res.status(200).json({
+
         success: true,
 
         data: {
+
           totalProducts,
 
           totalAnalyses,
@@ -125,6 +206,37 @@ export const getStoreOverview =
               averageScore
             ),
         },
+      });
+    }
+  );
+
+/*
+ =====================================
+ GET ALL ANALYSES
+ =====================================
+*/
+
+export const getAllAnalyses =
+  asyncHandler(
+    async (
+      _req: Request,
+      res: Response
+    ) => {
+
+      const analyses =
+        await Analysis.find()
+
+          .populate("productId")
+
+          .sort({
+            createdAt: -1,
+          });
+
+      res.status(200).json({
+
+        success: true,
+
+        data: analyses,
       });
     }
   );

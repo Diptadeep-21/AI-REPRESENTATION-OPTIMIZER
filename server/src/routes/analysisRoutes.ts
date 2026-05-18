@@ -1,12 +1,32 @@
 import express from "express";
 
 import {
+
   runProductAnalysis,
+
+  runAllProductAnalyses,
+
   getProductAnalysis,
+
   getStoreOverview,
+
+  getAllAnalyses,
+
 } from "../controllers/analysisController";
 
-const router = express.Router();
+const router =
+  express.Router();
+
+/*
+ =====================================
+ RUN ALL PRODUCT ANALYSES
+ =====================================
+*/
+
+router.post(
+  "/run-all",
+  runAllProductAnalyses
+);
 
 /*
  =====================================
@@ -21,7 +41,7 @@ router.get(
 
 /*
  =====================================
- ANALYZE PRODUCT
+ ANALYZE SINGLE PRODUCT
  =====================================
 */
 
@@ -32,7 +52,18 @@ router.post(
 
 /*
  =====================================
- GET PRODUCT ANALYSIS
+ GET ALL ANALYSES
+ =====================================
+*/
+
+router.get(
+  "/",
+  getAllAnalyses
+);
+
+/*
+ =====================================
+ GET SINGLE PRODUCT ANALYSIS
  =====================================
 */
 
