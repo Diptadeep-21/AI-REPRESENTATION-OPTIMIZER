@@ -57,8 +57,6 @@ app.use(
     origin:
       "https://merchanta-ai-frontend.vercel.app",
 
-    credentials: true,
-
     methods: [
       "GET",
       "POST",
@@ -73,14 +71,6 @@ app.use(
     ],
   })
 );
-
-/*
- =====================================
- PREFLIGHT SUPPORT
- =====================================
-*/
-
-app.options(/.*/, cors());
 
 app.use(express.json());
 
