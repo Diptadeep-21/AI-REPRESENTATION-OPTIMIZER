@@ -81,7 +81,7 @@ export const runSimulation =
     const response =
       await axios.post(
 
-        "http://localhost:8000/simulate",
+        `${process.env.AI_ENGINE_URL}/simulate`,
 
         {
 

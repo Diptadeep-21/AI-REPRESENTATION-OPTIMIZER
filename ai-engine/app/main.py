@@ -6,14 +6,16 @@ from app.routes.simulate import (
 )
 
 app = FastAPI(
-    title="AI Representation Optimizer",
+    title="Merchanta AI",
     version="1.0"
 )
 @app.get("/")
 def home():
     return {
-        "message": "AI Representation Optimizer Running, ready to analyze product representations!",
-        "Go to /docs for API documentation": "http://localhost:8000/docs"
+        "success": True,
+        "message": "Merchanta AI Running, ready to analyze product representations!",
+        "docs":
+            "/docs",
     }
 
 app.include_router(analyze_router)

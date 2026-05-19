@@ -52,7 +52,14 @@ const app =
  =====================================
 */
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://YOUR_FRONTEND.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 

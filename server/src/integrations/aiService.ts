@@ -5,7 +5,7 @@ export const analyzeWithAI =
 
     const response =
       await axios.post(
-        "http://localhost:8000/analyze",
+        `${process.env.AI_ENGINE_URL}/analyze`,
         payload
       );
 

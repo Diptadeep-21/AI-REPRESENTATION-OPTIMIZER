@@ -76,7 +76,7 @@ export default function Navbar() {
         const response =
           await axios.get(
 
-            "http://localhost:5000/api/reports/overview",
+            `${process.env.NEXT_PUBLIC_API_URL}/api/reports/overview`,
 
             {
               headers: {

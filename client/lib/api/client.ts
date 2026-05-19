@@ -4,7 +4,7 @@ const apiClient =
   axios.create({
 
     baseURL:
-      "http://localhost:5000/api",
+      process.env.NEXT_PUBLIC_API_URL,
 
     headers: {
       "Content-Type":
