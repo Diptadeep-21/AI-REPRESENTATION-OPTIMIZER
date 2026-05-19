@@ -55,7 +55,7 @@ const app =
 app.use(
   cors({
     origin: [
-      "https://YOUR_FRONTEND.vercel.app",
+      "https://merchanta-ai-frontend.vercel.app",
     ],
     credentials: true,
   })
