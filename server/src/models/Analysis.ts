@@ -7,14 +7,17 @@ export interface IAnalysis
   extends Document {
 
   productId:
-    mongoose.Types.ObjectId;
+  mongoose.Types.ObjectId;
+
+  storeId:
+  mongoose.Types.ObjectId;
 
   scores: {
 
     metadataScore: number;
 
     discoverabilityScore:
-      number;
+    number;
 
     trustScore: number;
 
@@ -38,16 +41,16 @@ export interface IAnalysis
     };
 
     optimizedTitle:
-      string;
+    string;
 
     optimizedDescription:
-      string;
+    string;
 
     semanticGaps:
-      string[];
+    string[];
 
     improvementPriority:
-      string;
+    string;
   };
 
   analyzedAt: Date;
@@ -111,6 +114,14 @@ const analysisSchema =
           Schema.Types.ObjectId,
 
         ref: "Product",
+
+        required: true,
+      },
+      storeId: {
+        type:
+          Schema.Types.ObjectId,
+
+        ref: "Store",
 
         required: true,
       },

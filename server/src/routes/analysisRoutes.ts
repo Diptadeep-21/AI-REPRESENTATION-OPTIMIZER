@@ -14,6 +14,10 @@ import {
 
 } from "../controllers/analysisController";
 
+import {
+  protect,
+} from "../middleware/authMiddleware";
+
 const router =
   express.Router();
 
@@ -25,6 +29,9 @@ const router =
 
 router.post(
   "/run-all",
+
+  protect,
+
   runAllProductAnalyses
 );
 
@@ -36,6 +43,9 @@ router.post(
 
 router.get(
   "/store-overview",
+
+  protect,
+
   getStoreOverview
 );
 
@@ -47,6 +57,9 @@ router.get(
 
 router.post(
   "/run/:productId",
+
+  protect,
+
   runProductAnalysis
 );
 
@@ -58,6 +71,9 @@ router.post(
 
 router.get(
   "/",
+
+  protect,
+
   getAllAnalyses
 );
 
@@ -69,6 +85,9 @@ router.get(
 
 router.get(
   "/:productId",
+
+  protect,
+
   getProductAnalysis
 );
 

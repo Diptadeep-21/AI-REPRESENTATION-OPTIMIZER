@@ -1,13 +1,13 @@
-import { Request, Response }
-  from "express";
+import { Response }
+from "express";
 
 import { asyncHandler }
-  from "../middleware/asyncHandler";
+from "../middleware/asyncHandler";
 
 import {
   runSimulation
 }
-  from "../services/simulationService";
+from "../services/simulationService";
 
 /*
  =====================================
@@ -17,40 +17,68 @@ import {
 
 export const simulateQuery =
   asyncHandler(
+
     async (
-      req: Request,
+      req: any,
       res: Response
     ) => {
 
       const {
+
         query,
+
         product,
+
         agent,
+
       } = req.body;
 
-      if (!query) {
-        return res.status(400).json({
-          success: false,
+      /*
+       ---------------------------------
+       VALIDATION
+       ---------------------------------
+      */
 
-          message:
-            "Query is required",
-        });
+      if (!query) {
+
+        return res.status(400)
+          .json({
+
+            success: false,
+
+            message:
+              "Query is required",
+          });
       }
+
+      /*
+       ---------------------------------
+       RUN SIMULATION
+       ---------------------------------
+      */
 
       const result =
         await runSimulation({
+
+          userId:
+            req.user._id,
+
           query,
+
           product,
+
           agent,
         });
 
       res.status(200).json({
+
         success: true,
 
         message:
           "Simulation completed",
 
-        data: result,
+        data:
+          result,
       });
     }
   );

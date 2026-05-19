@@ -1,11 +1,18 @@
-import axios from "axios";
+import apiClient
+from "@/lib/api/client";
+
+/*
+ =====================================
+ GET ALL ANALYSES
+ =====================================
+*/
 
 export const getAllAnalyses =
   async () => {
 
     const response =
-      await axios.get(
-        "http://localhost:5000/api/analysis"
+      await apiClient.get(
+        "/analysis"
       );
 
     return response.data.data;

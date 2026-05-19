@@ -1,4 +1,11 @@
-import axios from "axios";
+import apiClient
+from "@/lib/api/client";
+
+/*
+ =====================================
+ PAYLOAD
+ =====================================
+*/
 
 interface SimulationPayload {
 
@@ -9,15 +16,21 @@ interface SimulationPayload {
   agent: string;
 }
 
+/*
+ =====================================
+ RUN SIMULATION
+ =====================================
+*/
+
 export const runSimulation =
   async (
     payload: SimulationPayload
   ) => {
 
     const response =
-      await axios.post(
+      await apiClient.post(
 
-        "http://localhost:5000/api/simulation/query",
+        "/simulation/query",
 
         payload
       );

@@ -1,4 +1,4 @@
-import { Request, Response }
+import { Response }
 from "express";
 
 import { asyncHandler }
@@ -7,60 +7,99 @@ from "../middleware/asyncHandler";
 import Analysis
 from "../models/Analysis";
 
+import Product
+from "../models/Product";
+
+import {
+  getCurrentStore,
+} from "../utils/getCurrentStore";
+
 export const getReportsData =
   asyncHandler(
+
     async (
-      _req: Request,
+      req: any,
       res: Response
     ) => {
 
       /*
-      =====================================
-      FETCH ANALYSES
-      =====================================
+       =====================================
+       CURRENT MERCHANT STORE
+       =====================================
       */
 
-      const analyses =
-        await Analysis.find()
-          .populate("productId");
-
-      /*
-      =====================================
-      EXECUTIVE SUMMARY
-      =====================================
-      */
-
-      const totalProducts =
-        analyses.length;
-
-      const avgScore =
-        analyses.reduce(
-          (
-            acc: number,
-            curr: any
-          ) =>
-
-            acc +
-
-            (
-              curr.scores
-                ?.overallScore || 0
-            ),
-
-          0
-        ) /
-        (
-          totalProducts || 1
+      const store =
+        await getCurrentStore(
+          req.user._id
         );
 
       /*
-      =====================================
-      HIGH PRIORITY COUNT
-      =====================================
+       =====================================
+       FETCH STORE ANALYSES ONLY
+       =====================================
+      */
+
+      const analyses =
+        await Analysis.find({
+
+          storeId:
+            store._id,
+        })
+
+        .populate("productId");
+
+      /*
+       =====================================
+       FETCH STORE PRODUCTS COUNT
+       =====================================
+      */
+
+      const totalProducts =
+        await Product.countDocuments({
+
+          storeId:
+            store._id,
+        });
+
+      /*
+       =====================================
+       AVG SCORE
+       =====================================
+      */
+
+      const avgScore =
+
+        analyses.length > 0
+
+          ? analyses.reduce(
+
+              (
+                acc: number,
+
+                curr: any
+              ) =>
+
+                acc +
+
+                (
+                  curr.scores
+                    ?.overallScore || 0
+                ),
+
+              0
+            ) / analyses.length
+
+          : 0;
+
+      /*
+       =====================================
+       HIGH PRIORITY COUNT
+       =====================================
       */
 
       const highPriority =
         analyses.filter(
+
           (a: any) =>
             (
               a.scores
@@ -69,9 +108,9 @@ export const getReportsData =
         ).length;
 
       /*
-      =====================================
-      PRODUCTS NEEDING OPTIMIZATION
-      =====================================
+       =====================================
+       PRODUCTS NEEDING OPTIMIZATION
+       =====================================
       */
 
       const weakProducts =
@@ -105,84 +144,70 @@ export const getReportsData =
           );
 
       /*
-      =====================================
-      DYNAMIC VISIBILITY METRICS
-      =====================================
+       =====================================
+       DYNAMIC VISIBILITY METRICS
+       =====================================
       */
 
       const semanticVisibility =
-        Math.round(
+        analyses.length > 0
 
-          analyses.reduce(
-            (
-              acc: number,
-              curr: any
-            ) =>
+          ? Math.round(
 
-              acc +
+              analyses.reduce(
 
-              (
-                curr.scores
-                  ?.semanticScore || 0
-              ),
+                (
+                  acc: number,
 
-            0
-          ) /
-          (
-            totalProducts || 1
-          )
-        );
+                  curr: any
+                ) =>
+
+                  acc +
+
+                  (
+                    curr.scores
+                      ?.semanticScore || 0
+                  ),
+
+                0
+              ) / analyses.length
+            )
+
+          : 0;
 
       const llmReadiness =
-        Math.round(
-
-          analyses.reduce(
-            (
-              acc: number,
-              curr: any
-            ) =>
-
-              acc +
-
-              (
-                curr.scores
-                  ?.overallScore || 0
-              ),
-
-            0
-          ) /
-          (
-            totalProducts || 1
-          )
-        );
+        Math.round(avgScore);
 
       const discoverability =
-        Math.round(
+        analyses.length > 0
 
-          analyses.reduce(
-            (
-              acc: number,
-              curr: any
-            ) =>
+          ? Math.round(
 
-              acc +
+              analyses.reduce(
 
-              (
-                curr.scores
-                  ?.discoverabilityScore || 0
-              ),
+                (
+                  acc: number,
 
-            0
-          ) /
-          (
-            totalProducts || 1
-          )
-        );
+                  curr: any
+                ) =>
+
+                  acc +
+
+                  (
+                    curr.scores
+                      ?.discoverabilityScore || 0
+                  ),
+
+                0
+              ) / analyses.length
+            )
+
+          : 0;
 
       /*
-      =====================================
-      RESPONSE
-      =====================================
+       =====================================
+       RESPONSE
+       =====================================
       */
 
       res.status(200).json({

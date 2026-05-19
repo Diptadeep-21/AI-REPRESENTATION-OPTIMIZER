@@ -1,55 +1,113 @@
 import express from "express";
+
 import cors from "cors";
+
 import dotenv from "dotenv";
 
-import { connectDB } from "./config/db";
+import { connectDB }
+from "./config/db";
 
-import productRoutes from "./routes/productRoutes";
+import productRoutes
+from "./routes/productRoutes";
 
-import { errorHandler } from "./middleware/errorMiddleware";
+import storeRoutes
+from "./routes/storeRoutes";
 
-import storeRoutes from "./routes/storeRoutes";
+import dashboardRoutes
+from "./routes/dashboardRoutes";
 
-import dashboardRoutes from "./routes/dashboardRoutes";
+import ingestionRoutes
+from "./routes/ingestionRoutes";
 
-import ingestionRoutes from "./routes/ingestionRoutes";
+import analysisRoutes
+from "./routes/analysisRoutes";
 
-import analysisRoutes from "./routes/analysisRoutes";
+import simulationRoutes
+from "./routes/simulationRoutes";
 
-import simulationRoutes from "./routes/simulationRoutes";
+import reportRoutes
+from "./routes/reportRoutes";
 
-import productIntelligenceRoutes from "./routes/productIntelligenceRoutes";
+import authRoutes
+from "./routes/authRoutes";
 
-import reportRoutes from "./routes/reportRoutes";
+import demoRoutes
+from "./routes/demoRoutes";
+
+import {
+  errorHandler,
+}
+from "./middleware/errorMiddleware";
 
 dotenv.config();
 
 connectDB();
 
-const app = express();
+const app =
+  express();
+
+/*
+ =====================================
+ MIDDLEWARE
+ =====================================
+*/
 
 app.use(cors());
 
 app.use(express.json());
 
-app.get("/health", (_req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Server running successfully",
-  });
-});
+/*
+ =====================================
+ HEALTH CHECK
+ =====================================
+*/
 
-app.use("/api/products", productRoutes);
+app.get(
 
-app.use("/api/stores", storeRoutes);
+  "/health",
 
-app.use("/api/dashboard", dashboardRoutes);
+  (_req, res) => {
 
-app.use("/api/simulation", simulationRoutes);
+    res.status(200).json({
 
-app.use(errorHandler);
+      success: true,
 
-app.use("/api/ingestion", ingestionRoutes);
+      message:
+        "Server running successfully",
+    });
+  }
+);
+
+/*
+ =====================================
+ ROUTES
+ =====================================
+*/
+
+app.use(
+  "/api/products",
+  productRoutes
+);
+
+app.use(
+  "/api/stores",
+  storeRoutes
+);
+
+app.use(
+  "/api/dashboard",
+  dashboardRoutes
+);
+
+app.use(
+  "/api/simulation",
+  simulationRoutes
+);
+
+app.use(
+  "/api/ingestion",
+  ingestionRoutes
+);
 
 app.use(
   "/api/analysis",
@@ -57,17 +115,34 @@ app.use(
 );
 
 app.use(
-  "/api/products",
-  productIntelligenceRoutes
-);
-
-app.use(
   "/api/reports",
   reportRoutes
 );
 
-const PORT = process.env.PORT || 5000;
+app.use(
+  "/api/demo",
+  demoRoutes
+);
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+/*
+ =====================================
+ ERROR HANDLER
+ =====================================
+*/
+
+app.use(errorHandler);
+
+const PORT =
+  process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+
+  console.log(
+    `Server running on port ${PORT}`
+  );
 });

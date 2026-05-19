@@ -2,126 +2,159 @@ import Product from "../models/Product";
 
 import Analysis from "../models/Analysis";
 
-import { calculateProductScores } from "../analysis/scoringEngine";
+import { calculateProductScores }
+from "../analysis/scoringEngine";
 
-import { detectProductIssues } from "../analysis/issueDetector";
+import { detectProductIssues }
+from "../analysis/issueDetector";
 
-import { generateRecommendations } from "../analysis/recommendationEngine";
+import { generateRecommendations }
+from "../analysis/recommendationEngine";
 
-import { analyzeWithAI } from "../integrations/aiService";
+import { analyzeWithAI }
+from "../integrations/aiService";
+
+import {
+  getCurrentStore,
+} from "../utils/getCurrentStore";
 
 export const analyzeProduct =
-    async (productId: string) => {
+  async (
 
-        /*
-         =====================================
-         FETCH PRODUCT
-         =====================================
-        */
+    userId: string,
 
-        const product =
-            await Product.findById(
-                productId
-            );
+    productId: string
+  ) => {
 
-        if (!product) {
-            throw new Error(
-                "Product not found"
-            );
+    /*
+     =====================================
+     CURRENT MERCHANT STORE
+     =====================================
+    */
+
+    const store =
+      await getCurrentStore(
+        userId
+      );
+
+    /*
+     =====================================
+     FETCH PRODUCT
+     =====================================
+    */
+
+    const product =
+      await Product.findOne({
+
+        _id: productId,
+
+        storeId:
+          store._id,
+      });
+
+    if (!product) {
+
+      throw new Error(
+        "Product not found"
+      );
+    }
+
+    /*
+     =====================================
+     DETERMINISTIC SCORING
+     =====================================
+    */
+
+    const scores =
+      calculateProductScores(
+        product
+      );
+
+    /*
+     =====================================
+     ISSUE DETECTION
+     =====================================
+    */
+
+    const issues =
+      detectProductIssues(
+
+        product,
+
+        scores
+      );
+
+    /*
+     =====================================
+     RECOMMENDATIONS
+     =====================================
+    */
+
+    const recommendations =
+      generateRecommendations(
+        issues
+      );
+
+    /*
+     =====================================
+     AI ANALYSIS
+     =====================================
+    */
+
+    const aiInsights =
+      await analyzeWithAI({
+
+        product,
+
+        scores,
+
+        issues,
+
+        recommendations,
+      });
+
+    /*
+     =====================================
+     SAVE ANALYSIS
+     =====================================
+    */
+
+    const analysis =
+      await Analysis.findOneAndUpdate(
+
+        {
+          productId:
+            product._id,
+
+          storeId:
+            product.storeId,
+        },
+
+        {
+          productId:
+            product._id,
+
+          storeId:
+            product.storeId,
+
+          scores,
+
+          issues,
+
+          recommendations,
+
+          aiInsights,
+
+          analyzedAt:
+            new Date(),
+        },
+
+        {
+          upsert: true,
+
+          new: true,
         }
+      );
 
-        /*
-         =====================================
-         DETERMINISTIC SCORING
-         =====================================
-        */
-
-        const scores =
-            calculateProductScores(
-                product
-            );
-
-        /*
-         =====================================
-         ISSUE DETECTION
-         =====================================
-        */
-
-        const issues =
-            detectProductIssues(
-                product,
-                scores
-            );
-
-        /*
-         =====================================
-         RECOMMENDATIONS
-         =====================================
-        */
-
-        const recommendations =
-            generateRecommendations(
-                issues
-            );
-
-        /*
-         =====================================
-         AI ANALYSIS
-         =====================================
-        */
-
-        const aiInsights =
-            await analyzeWithAI({
-                product,
-
-                scores,
-
-                issues,
-
-                recommendations,
-            });
-
-        /*
-         =====================================
-         SAVE ANALYSIS
-         =====================================
-        */
-
-        console.log(
-            "AI INSIGHTS:",
-            aiInsights
-        );
-
-        const analysis =
-            await Analysis.findOneAndUpdate(
-
-                {
-                    productId:
-                        product._id,
-                },
-
-                {
-                    productId:
-                        product._id,
-
-                    scores,
-
-                    issues,
-
-                    recommendations,
-
-                    aiInsights,
-
-                    analyzedAt:
-                        new Date(),
-                },
-
-                {
-                    upsert: true,
-
-                    new: true,
-                }
-            );
-
-        return analysis;
-    };
+    return analysis;
+  };

@@ -1,11 +1,21 @@
-import axios from "axios";
+import apiClient
+from "@/lib/api/client";
+
+/*
+ =====================================
+ GET PRODUCT ANALYSIS
+ =====================================
+*/
 
 export const getProductAnalysis =
-  async (productId: string) => {
+  async (
+    productId: string
+  ) => {
 
     const response =
-      await axios.get(
-        `http://localhost:5000/api/analysis/${productId}`
+      await apiClient.get(
+
+        `/analysis/${productId}`
       );
 
     return response.data.data;

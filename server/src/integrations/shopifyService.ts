@@ -1,22 +1,32 @@
 import axios from "axios";
 
+/*
+ =====================================
+ FETCH PRODUCTS FROM SHOPIFY
+ =====================================
+*/
+
 export const fetchProductsFromShopify =
-  async () => {
-    const storeDomain =
-      process.env.SHOPIFY_STORE_DOMAIN;
+  async (
 
-    const accessToken =
-      process.env.SHOPIFY_ACCESS_TOKEN;
+    shopifyDomain: string,
 
-    const response = await axios.get(
-      `https://${storeDomain}/admin/api/2025-01/products.json`,
-      {
-        headers: {
-          "X-Shopify-Access-Token":
-            accessToken,
-        },
-      }
-    );
+    accessToken: string
+  ) => {
+
+    const response =
+      await axios.get(
+
+        `https://${shopifyDomain}/admin/api/2026-04/products.json`,
+
+        {
+          headers: {
+
+            "X-Shopify-Access-Token":
+              accessToken,
+          },
+        }
+      );
 
     return response.data.products;
   };

@@ -3,18 +3,18 @@ from "@/lib/api/client";
 
 /*
  =====================================
- DASHBOARD OVERVIEW
+ CREATE DEMO WORKSPACE
  =====================================
 */
 
-export const getDashboardOverview =
+export const setupDemoWorkspace =
   async () => {
 
     const response =
-      await apiClient.get(
+      await apiClient.post(
 
-        "/dashboard/overview"
+        "/demo/setup"
       );
 
-    return response.data.data;
+    return response.data;
   };

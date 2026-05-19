@@ -1,4 +1,4 @@
-import { Request, Response }
+import { Response }
 from "express";
 
 import Analysis
@@ -15,6 +15,11 @@ import {
 }
 from "../services/analysisService";
 
+import {
+  getCurrentStore,
+}
+from "../utils/getCurrentStore";
+
 /*
  =====================================
  RUN PRODUCT ANALYSIS
@@ -23,17 +28,20 @@ from "../services/analysisService";
 
 export const runProductAnalysis =
   asyncHandler(
+
     async (
-      req: Request,
+      req: any,
       res: Response
     ) => {
 
       const productId =
-        req.params
-          .productId as string;
+        req.params.productId;
 
       const analysis =
         await analyzeProduct(
+
+          req.user._id,
+
           productId
         );
 
@@ -44,7 +52,8 @@ export const runProductAnalysis =
         message:
           "Product analyzed successfully",
 
-        data: analysis,
+        data:
+          analysis,
       });
     }
   );
@@ -57,13 +66,23 @@ export const runProductAnalysis =
 
 export const runAllProductAnalyses =
   asyncHandler(
+
     async (
-      _req: Request,
+      req: any,
       res: Response
     ) => {
 
+      const store =
+        await getCurrentStore(
+          req.user._id
+        );
+
       const products =
-        await Product.find();
+        await Product.find({
+
+          storeId:
+            store._id,
+        });
 
       const results = [];
 
@@ -73,6 +92,9 @@ export const runAllProductAnalyses =
 
           const analysis =
             await analyzeProduct(
+
+              req.user._id,
+
               product._id.toString()
             );
 
@@ -101,7 +123,8 @@ export const runAllProductAnalyses =
         total:
           results.length,
 
-        data: results,
+        data:
+          results,
       });
     }
   );
@@ -114,18 +137,27 @@ export const runAllProductAnalyses =
 
 export const getProductAnalysis =
   asyncHandler(
+
     async (
-      req: Request,
+      req: any,
       res: Response
     ) => {
 
       const productId =
-        req.params
-          .productId as string;
+        req.params.productId;
+
+      const store =
+        await getCurrentStore(
+          req.user._id
+        );
 
       const analysis =
         await Analysis.findOne({
+
           productId,
+
+          storeId:
+            store._id,
         })
 
         .populate("productId")
@@ -136,20 +168,22 @@ export const getProductAnalysis =
 
       if (!analysis) {
 
-        return res.status(404).json({
+        return res.status(404)
+          .json({
 
-          success: false,
+            success: false,
 
-          message:
-            "Analysis not found",
-        });
+            message:
+              "Analysis not found",
+          });
       }
 
       res.status(200).json({
 
         success: true,
 
-        data: analysis,
+        data:
+          analysis,
       });
     }
   );
@@ -162,27 +196,44 @@ export const getProductAnalysis =
 
 export const getStoreOverview =
   asyncHandler(
+
     async (
-      _req: Request,
+      req: any,
       res: Response
     ) => {
 
+      const store =
+        await getCurrentStore(
+          req.user._id
+        );
+
       const totalProducts =
-        await Product.countDocuments();
+        await Product.countDocuments({
+
+          storeId:
+            store._id,
+        });
 
       const analyses =
-        await Analysis.find();
+        await Analysis.find({
+
+          storeId:
+            store._id,
+        });
 
       const totalAnalyses =
         analyses.length;
 
       const averageScore =
+
         totalAnalyses > 0
 
           ? analyses.reduce(
+
               (acc, item) =>
 
                 acc +
+
                 item.scores
                   .overallScore,
 
@@ -218,25 +269,36 @@ export const getStoreOverview =
 
 export const getAllAnalyses =
   asyncHandler(
+
     async (
-      _req: Request,
+      req: any,
       res: Response
     ) => {
 
+      const store =
+        await getCurrentStore(
+          req.user._id
+        );
+
       const analyses =
-        await Analysis.find()
+        await Analysis.find({
 
-          .populate("productId")
+          storeId:
+            store._id,
+        })
 
-          .sort({
-            createdAt: -1,
-          });
+        .populate("productId")
+
+        .sort({
+          createdAt: -1,
+        });
 
       res.status(200).json({
 
         success: true,
 
-        data: analyses,
+        data:
+          analyses,
       });
     }
   );

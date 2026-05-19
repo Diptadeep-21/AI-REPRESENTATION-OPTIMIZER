@@ -1,11 +1,66 @@
-import Store from "../models/Store";
+import Store
+  from "../models/Store";
 
-export const createStoreService = async (
-  storeData: any
-) => {
-  return await Store.create(storeData);
-};
+/*
+ =====================================
+ CREATE STORE
+ =====================================
+*/
 
-export const getAllStoresService = async () => {
-  return await Store.find();
-};
+export const createStoreService =
+  async (
+    userId: string,
+    storeData: any
+  ) => {
+
+    console.log(
+      "NEW STORE SERVICE RUNNING"
+    );
+
+    console.log(
+      "USER ID:",
+      userId
+    );
+
+    const existingStore =
+      await Store.findOne({
+
+        owner: userId,
+      });
+
+    console.log(
+      "EXISTING STORE:",
+      existingStore
+    );
+
+    if (existingStore) {
+
+      throw new Error(
+        "Merchant already has a store"
+      );
+    }
+
+    return await Store.create({
+
+      ...storeData,
+
+      owner: userId,
+    });
+  };
+
+/*
+ =====================================
+ GET CURRENT MERCHANT STORE
+ =====================================
+*/
+
+export const getAllStoresService =
+  async (
+    userId: string
+  ) => {
+
+    return await Store.find({
+
+      owner: userId,
+    });
+  };

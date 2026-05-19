@@ -1,15 +1,29 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface IStore extends Document {
+export interface IStore
+  extends Document {
+
+  owner:
+    mongoose.Types.ObjectId;
+
   storeName: string;
+
   shopifyDomain: string;
+
   accessToken: string;
+
   isConnected: boolean;
+
   createdAt: Date;
 }
 
 const storeSchema = new Schema<IStore>(
   {
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     storeName: {
       type: String,
       required: true,

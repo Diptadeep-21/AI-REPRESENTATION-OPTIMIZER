@@ -1,11 +1,19 @@
-import axios from "axios";
+import apiClient
+from "@/lib/api/client";
+
+/*
+ =====================================
+ GET REPORTS
+ =====================================
+*/
 
 export const getReports =
   async () => {
 
     const response =
-      await axios.get(
-        "http://localhost:5000/api/reports/overview"
+      await apiClient.get(
+
+        "/reports/overview"
       );
 
     return response.data.data;

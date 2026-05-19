@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response }
+from "express";
 
-import { asyncHandler } from "../middleware/asyncHandler";
+import { asyncHandler }
+from "../middleware/asyncHandler";
 
 import {
   getDashboardOverviewService,
@@ -8,13 +10,24 @@ import {
 
 export const getDashboardOverview =
   asyncHandler(
-    async (_req: Request, res: Response) => {
+
+    async (
+      req: any,
+      res: Response
+    ) => {
+
       const dashboardData =
-        await getDashboardOverviewService();
+        await getDashboardOverviewService(
+
+          req.user._id
+        );
 
       res.status(200).json({
+
         success: true,
-        data: dashboardData,
+
+        data:
+          dashboardData,
       });
     }
   );

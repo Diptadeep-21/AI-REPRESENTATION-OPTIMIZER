@@ -1,31 +1,90 @@
-import { Request, Response } from "express";
+import { Request, Response }
+from "express";
 
-import { asyncHandler } from "../middleware/asyncHandler";
+import { asyncHandler }
+from "../middleware/asyncHandler";
 
 import {
+
   createStoreService,
+
   getAllStoresService,
-} from "../services/storeService";
 
-export const createStore = asyncHandler(
-  async (req: Request, res: Response) => {
-    const store = await createStoreService(req.body);
+}
+from "../services/storeService";
 
-    res.status(201).json({
-      success: true,
-      data: store,
-    });
-  }
-);
+/*
+ =====================================
+ EXTENDED REQUEST
+ =====================================
+*/
 
-export const getAllStores = asyncHandler(
-  async (_req: Request, res: Response) => {
-    const stores = await getAllStoresService();
+interface AuthRequest
+  extends Request {
 
-    res.status(200).json({
-      success: true,
-      count: stores.length,
-      data: stores,
-    });
-  }
-);
+  user?: any;
+}
+
+/*
+ =====================================
+ CREATE STORE
+ =====================================
+*/
+
+export const createStore =
+  asyncHandler(
+
+    async (
+      req: AuthRequest,
+      res: Response
+    ) => {
+
+      const store =
+        await createStoreService(
+
+          req.user._id,
+
+          req.body
+        );
+
+      res.status(201).json({
+
+        success: true,
+
+        data: store,
+      });
+    }
+  );
+
+/*
+ =====================================
+ GET CURRENT MERCHANT STORES
+ =====================================
+*/
+
+export const getAllStores =
+  asyncHandler(
+
+    async (
+      req: AuthRequest,
+      res: Response
+    ) => {
+
+      const stores =
+        await getAllStoresService(
+
+          req.user._id
+        );
+
+      res.status(200).json({
+
+        success: true,
+
+        count:
+          stores.length,
+
+        data:
+          stores,
+      });
+    }
+  );

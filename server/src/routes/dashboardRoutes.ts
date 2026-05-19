@@ -1,4 +1,8 @@
 import express from "express";
+import {
+  protect,
+} from "../middleware/authMiddleware";
+
 
 import {
   getDashboardOverview,
@@ -6,6 +10,6 @@ import {
 
 const router = express.Router();
 
-router.get("/overview", getDashboardOverview);
+router.get("/overview",  protect, getDashboardOverview);
 
 export default router;

@@ -3,18 +3,32 @@
 import { usePathname } from "next/navigation";
 import { Bell, RefreshCw, Download } from "lucide-react";
 import { useState } from "react";
+import axios from "axios";
+
+import {
+  LogOut,
+} from "lucide-react";
+
+import {
+  useAuth,
+} from "@/providers/AuthProvider";
 
 const PAGE_META: Record<string, { title: string; sub: string }> = {
-  "/dashboard":  { title: "AI Commerce Overview",  sub: "Monitor how AI shopping agents perceive your store" },
-  "/analysis":   { title: "AI Visibility Analysis", sub: "Deep-dive into how agents rank your products" },
-  "/simulation": { title: "Agent Simulation",       sub: "Simulate real AI shopping agent queries" },
-  "/reports":    { title: "Reports",                sub: "Export and share visibility insights" },
-  "/settings":   { title: "Settings",               sub: "Manage your store connection and preferences" },
+  "/dashboard": { title: "AI Commerce Overview", sub: "Monitor how AI shopping agents perceive your store" },
+  "/analysis": { title: "AI Visibility Analysis", sub: "Deep-dive into how agents rank your products" },
+  "/simulation": { title: "Agent Simulation", sub: "Simulate real AI shopping agent queries" },
+  "/reports": { title: "Reports", sub: "Export and share visibility insights" },
+  "/settings": { title: "Settings", sub: "Manage your store connection and preferences" },
 };
 
 export default function Navbar() {
   const pathname = usePathname();
   const [scanning, setScanning] = useState(false);
+
+  const {
+    user,
+    logout,
+  } = useAuth();
 
   const meta = PAGE_META[pathname] ?? { title: "AI Optimizer", sub: "AI Commerce Intelligence" };
 
@@ -22,6 +36,134 @@ export default function Navbar() {
     setScanning(true);
     setTimeout(() => setScanning(false), 2000);
   };
+
+  const handleLogout = () => {
+
+    logout();
+
+    window.location.href =
+      "/login";
+  };
+
+  /*
+ =====================================
+ EXPORT DASHBOARD ANALYTICS
+ =====================================
+*/
+
+  const handleExport =
+    async () => {
+
+      try {
+
+        /*
+         =====================================
+         GET TOKEN
+         =====================================
+        */
+
+        const token =
+          localStorage.getItem(
+            "token"
+          );
+
+        /*
+         =====================================
+         FETCH REPORT DATA
+         =====================================
+        */
+
+        const response =
+          await axios.get(
+
+            "http://localhost:5000/api/reports/overview",
+
+            {
+              headers: {
+
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+        /*
+         =====================================
+         CREATE EXPORT FILE
+         =====================================
+        */
+
+        const blob =
+          new Blob(
+
+            [
+              JSON.stringify(
+
+                response.data,
+
+                null,
+
+                2
+              ),
+            ],
+
+            {
+              type:
+                "application/json",
+            }
+          );
+
+        /*
+         =====================================
+         CREATE DOWNLOAD LINK
+         =====================================
+        */
+
+        const url =
+          window.URL.createObjectURL(
+            blob
+          );
+
+        const link =
+          document.createElement(
+            "a"
+          );
+
+        link.href = url;
+
+        link.download =
+          `ai-report-${Date.now()}.json`;
+
+        document.body.appendChild(
+          link
+        );
+
+        link.click();
+
+        link.remove();
+
+        window.URL.revokeObjectURL(
+          url
+        );
+
+        alert(
+          "Report exported successfully"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Export failed:",
+          error
+        );
+
+        alert(
+          "Failed to export report"
+        );
+      }
+    };
+
+
 
   return (
     <>
@@ -142,7 +284,10 @@ export default function Navbar() {
             {scanning ? "Scanning…" : "Re-scan"}
           </button>
 
-          <button className="nb-btn primary">
+          <button
+            className="nb-btn primary"
+            onClick={handleExport}
+          >
             <Download size={13} />
             Export
           </button>
@@ -152,7 +297,63 @@ export default function Navbar() {
             <span className="notif-badge" />
           </button>
 
-          <button className="avatar-btn" />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                lineHeight: 1.1,
+              }}
+            >
+
+              <span
+                style={{
+                  fontSize: "12px",
+                  color: "#e8edf5",
+                  fontWeight: 600,
+                }}
+              >
+
+                {user?.name || "Merchant"}
+
+              </span>
+
+              <span
+                style={{
+                  fontSize: "10px",
+                  color: "#64748b",
+                }}
+              >
+
+                {user?.email}
+
+              </span>
+            </div>
+
+            <button
+              className="avatar-btn"
+              title="Merchant Account"
+            />
+
+            <button
+              className="nb-icon-btn"
+              onClick={handleLogout}
+              title="Logout"
+            >
+
+              <LogOut size={14} />
+
+            </button>
+
+          </div>
         </div>
       </header>
     </>

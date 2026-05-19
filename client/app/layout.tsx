@@ -1,11 +1,22 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
+import type {
+  Metadata,
+} from "next";
 
-import QueryProvider from "@/providers/QueryProvider";
+import QueryProvider
+from "@/providers/QueryProvider";
+
+import {
+  AuthProvider,
+}
+from "@/providers/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "AI Representation Optimizer",
+
+  title:
+    "AI Representation Optimizer",
+
   description:
     "Understand how AI shopping agents perceive and rank your store.",
 };
@@ -15,13 +26,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <html lang="en" className="dark">
+
+    <html
+      lang="en"
+      className="dark"
+    >
+
       <body>
+
         <QueryProvider>
-          {children}
+
+          <AuthProvider>
+
+            {children}
+
+          </AuthProvider>
+
         </QueryProvider>
+
       </body>
+
     </html>
   );
 }

@@ -6,26 +6,20 @@ import {
 from "../middleware/authMiddleware";
 
 import {
-  syncProducts,
+  createDemoWorkspace,
 }
-from "../controllers/ingestionController";
+from "../controllers/demoController";
 
 const router =
   express.Router();
 
-/*
- =====================================
- SHOPIFY PRODUCT SYNC
- =====================================
-*/
-
 router.post(
 
-  "/sync",
+  "/setup",
 
   protect,
 
-  syncProducts
+  createDemoWorkspace
 );
 
 export default router;

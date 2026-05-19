@@ -1,19 +1,50 @@
-import { Request, Response } from "express";
+import { Response }
+from "express";
 
-import { asyncHandler } from "../middleware/asyncHandler";
+import { asyncHandler }
+from "../middleware/asyncHandler";
 
 import {
   syncShopifyProductsService,
-} from "../services/ingestionService";
+}
+from "../services/ingestionService";
+
+/*
+ =====================================
+ SYNC SHOPIFY PRODUCTS
+ =====================================
+*/
 
 export const syncProducts =
   asyncHandler(
-    async (_req: Request, res: Response) => {
+
+    async (
+      req: any,
+      res: Response
+    ) => {
+
+      /*
+       =====================================
+       SYNC MERCHANT PRODUCTS
+       =====================================
+      */
+
       const result =
-        await syncShopifyProductsService();
+        await syncShopifyProductsService(
+
+          req.user._id
+        );
+
+      /*
+       =====================================
+       RESPONSE
+       =====================================
+      */
 
       res.status(200).json({
+
         success: true,
+
         message:
           "Products synced successfully",
 

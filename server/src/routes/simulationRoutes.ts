@@ -1,4 +1,7 @@
 import express from "express";
+import {
+  protect,
+} from "../middleware/authMiddleware";
 
 import {
   simulateQuery
@@ -15,7 +18,7 @@ const router =
 */
 
 router.post(
-  "/query",
+  "/query", protect,
   simulateQuery
 );
 

@@ -1,87 +1,143 @@
-import Product from "../models/Product";
+import Store
+from "../models/Store";
 
-import Analysis from "../models/Analysis";
+import Product
+from "../models/Product";
 
-import Store from "../models/Store";
+import Analysis
+from "../models/Analysis";
+
+import {
+  getCurrentStore,
+} from "../utils/getCurrentStore";
 
 export const getDashboardOverviewService =
-  async () => {
+  async (
+    userId: string
+  ) => {
 
     /*
      =====================================
-     BASIC COUNTS
+     CURRENT MERCHANT STORE
      =====================================
     */
 
-    const totalStores =
-      await Store.countDocuments();
-
-    const totalProducts =
-      await Product.countDocuments();
-
-    const totalAnalyses =
-      await Analysis.countDocuments();
+    const store =
+      await getCurrentStore(
+        userId
+      );
 
     /*
      =====================================
-     FETCH ANALYSES
+     STORE PRODUCTS
+     =====================================
+    */
+
+    const totalProducts =
+      await Product.countDocuments({
+
+        storeId:
+          store._id,
+      });
+
+    /*
+     =====================================
+     STORE ANALYSES
      =====================================
     */
 
     const analyses =
-      await Analysis.find();
+      await Analysis.find({
+
+        storeId:
+          store._id,
+      });
+
+    const totalAnalyses =
+      analyses.length;
 
     /*
      =====================================
-     SCORE AGGREGATION
+     AVERAGE SCORES
      =====================================
     */
 
-    let averageSemanticScore = 0;
+    const scores = {
 
-    let averageTrustScore = 0;
+      semanticScore: 0,
 
-    let averageDiscoverabilityScore = 0;
+      trustScore: 0,
 
-    let averageOverallScore = 0;
+      discoverabilityScore: 0,
 
-    if (analyses.length > 0) {
+      overallScore: 0,
+    };
 
-      averageSemanticScore =
-        analyses.reduce(
-          (acc, curr) =>
-            acc +
-            curr.scores
-              .semanticScore,
-          0
-        ) / analyses.length;
+    if (totalAnalyses > 0) {
 
-      averageTrustScore =
-        analyses.reduce(
-          (acc, curr) =>
-            acc +
-            curr.scores
-              .trustScore,
-          0
-        ) / analyses.length;
+      scores.semanticScore =
+        Math.round(
 
-      averageDiscoverabilityScore =
-        analyses.reduce(
-          (acc, curr) =>
-            acc +
-            curr.scores
-              .discoverabilityScore,
-          0
-        ) / analyses.length;
+          analyses.reduce(
 
-      averageOverallScore =
-        analyses.reduce(
-          (acc, curr) =>
-            acc +
-            curr.scores
-              .overallScore,
-          0
-        ) / analyses.length;
+            (acc, curr) =>
+
+              acc +
+
+              curr.scores
+                .semanticScore,
+
+            0
+          ) / totalAnalyses
+        );
+
+      scores.trustScore =
+        Math.round(
+
+          analyses.reduce(
+
+            (acc, curr) =>
+
+              acc +
+
+              curr.scores
+                .trustScore,
+
+            0
+          ) / totalAnalyses
+        );
+
+      scores.discoverabilityScore =
+        Math.round(
+
+          analyses.reduce(
+
+            (acc, curr) =>
+
+              acc +
+
+              curr.scores
+                .discoverabilityScore,
+
+            0
+          ) / totalAnalyses
+        );
+
+      scores.overallScore =
+        Math.round(
+
+          analyses.reduce(
+
+            (acc, curr) =>
+
+              acc +
+
+              curr.scores
+                .overallScore,
+
+            0
+          ) / totalAnalyses
+        );
     }
 
     /*
@@ -92,33 +148,12 @@ export const getDashboardOverviewService =
 
     return {
 
-      totalStores,
+      totalStores: 1,
 
       totalProducts,
 
       totalAnalyses,
 
-      scores: {
-
-        semanticScore:
-          Math.round(
-            averageSemanticScore
-          ),
-
-        trustScore:
-          Math.round(
-            averageTrustScore
-          ),
-
-        discoverabilityScore:
-          Math.round(
-            averageDiscoverabilityScore
-          ),
-
-        overallScore:
-          Math.round(
-            averageOverallScore
-          ),
-      },
+      scores,
     };
   };

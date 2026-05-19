@@ -1,11 +1,19 @@
-import axios from "axios";
+import apiClient
+from "@/lib/api/client";
+
+/*
+ =====================================
+ PRODUCT INTELLIGENCE
+ =====================================
+*/
 
 export const getProductsIntelligence =
   async () => {
 
     const response =
-      await axios.get(
-        "http://localhost:5000/api/products/intelligence"
+      await apiClient.get(
+
+        "/products/intelligence"
       );
 
     return response.data.data;

@@ -5,11 +5,11 @@ import { asyncHandler }
 from "../middleware/asyncHandler";
 
 import {
-  getProductsIntelligenceService,
+  setupDemoWorkspace,
 }
-from "../services/productIntelligenceService";
+from "../services/demoService";
 
-export const getProductsIntelligence =
+export const createDemoWorkspace =
   asyncHandler(
 
     async (
@@ -17,8 +17,13 @@ export const getProductsIntelligence =
       res: Response
     ) => {
 
-      const data =
-        await getProductsIntelligenceService(
+      console.log(
+        "DEMO USER:",
+        req.user
+      );
+
+      const result =
+        await setupDemoWorkspace(
 
           req.user._id
         );
@@ -27,7 +32,10 @@ export const getProductsIntelligence =
 
         success: true,
 
-        data,
+        message:
+          "Demo workspace created",
+
+        data: result,
       });
     }
   );

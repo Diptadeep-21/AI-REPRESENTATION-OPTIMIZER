@@ -1,17 +1,41 @@
-import Product from "../models/Product";
-import Analysis from "../models/Analysis";
+import Product
+from "../models/Product";
+
+import Analysis
+from "../models/Analysis";
+
+import {
+  getCurrentStore,
+} from "../utils/getCurrentStore";
 
 export const getProductsIntelligenceService =
-  async () => {
+  async (
+    userId: string
+  ) => {
 
     /*
      =====================================
-     FETCH PRODUCTS
+     CURRENT MERCHANT STORE
+     =====================================
+    */
+
+    const store =
+      await getCurrentStore(
+        userId
+      );
+
+    /*
+     =====================================
+     FETCH STORE PRODUCTS
      =====================================
     */
 
     const products =
-      await Product.find();
+      await Product.find({
+
+        storeId:
+          store._id,
+      });
 
     const intelligenceData =
       [];
@@ -32,7 +56,13 @@ export const getProductsIntelligenceService =
 
       const analysis =
         await Analysis.findOne({
-          productId: product._id,
+
+          productId:
+            product._id,
+
+          storeId:
+            store._id,
+
         }).sort({
           createdAt: -1,
         });
@@ -46,9 +76,12 @@ export const getProductsIntelligenceService =
       if (!analysis) {
 
         intelligenceData.push({
-          productId: product._id,
 
-          title: product.title,
+          productId:
+            product._id,
+
+          title:
+            product.title,
 
           image:
             product.images?.[0] || "",
@@ -65,7 +98,8 @@ export const getProductsIntelligenceService =
 
           recommendationCount: 0,
 
-          status: "NOT_ANALYZED",
+          status:
+            "NOT_ANALYZED",
 
           improvementPriority:
             "UNKNOWN",
@@ -83,21 +117,30 @@ export const getProductsIntelligenceService =
       let status = "POOR";
 
       if (
-        analysis.scores.overallScore >= 85
+        analysis.scores
+          .overallScore >= 85
       ) {
-        status = "EXCELLENT";
+
+        status =
+          "EXCELLENT";
       }
 
       else if (
-        analysis.scores.overallScore >= 70
+        analysis.scores
+          .overallScore >= 70
       ) {
-        status = "GOOD";
+
+        status =
+          "GOOD";
       }
 
       else if (
-        analysis.scores.overallScore >= 50
+        analysis.scores
+          .overallScore >= 50
       ) {
-        status = "MODERATE";
+
+        status =
+          "MODERATE";
       }
 
       /*
@@ -108,9 +151,11 @@ export const getProductsIntelligenceService =
 
       intelligenceData.push({
 
-        productId: product._id,
+        productId:
+          product._id,
 
-        title: product.title,
+        title:
+          product.title,
 
         image:
           product.images?.[0] || "",
@@ -132,17 +177,21 @@ export const getProductsIntelligenceService =
             .trustScore,
 
         issuesCount:
-          analysis.issues.length,
+          analysis.issues
+            .length,
 
         recommendationCount:
-          analysis.recommendations
+          analysis
+            .recommendations
             .length,
 
         status,
 
         improvementPriority:
+
           analysis.aiInsights
             ?.improvementPriority ||
+
           "MEDIUM",
       });
     }
@@ -154,8 +203,15 @@ export const getProductsIntelligenceService =
     */
 
     intelligenceData.sort(
-      (a: any, b: any) =>
-        b.overallScore -
+      (
+        a: any,
+        b: any
+      ) =>
+
+        b.overallScore
+
+        -
+
         a.overallScore
     );
 

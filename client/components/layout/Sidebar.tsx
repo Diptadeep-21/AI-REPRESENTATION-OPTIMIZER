@@ -14,18 +14,36 @@ import {
   Lightbulb,
 } from "lucide-react";
 
+import { useRouter }
+  from "next/navigation";
+
+import { useState }
+  from "react";
+
+import {
+  setupDemoWorkspace,
+}
+  from "@/services/demoService";
+
 const links = [
-  { title: "Overview",      href: "/dashboard",   icon: LayoutDashboard, section: "main" },
-  { title: "AI Visibility", href: "/analysis",    icon: Brain,           section: "main" },
-  { title: "Products",      href: "/products",    icon: Sparkles,        section: "main",    showBadge: true },
-  { title: "Recommendations", href: "/recommendations", icon: Lightbulb,     section: "analyse" },
-  { title: "Simulation",    href: "/simulation",  icon: Sparkles,        section: "analyse" },
-  { title: "Reports",       href: "/reports",     icon: FileText,        section: "analyse" },
-  { title: "Settings",      href: "/settings",    icon: Settings,        section: "account" },
+  { title: "Overview", href: "/dashboard", icon: LayoutDashboard, section: "main" },
+  { title: "AI Visibility", href: "/analysis", icon: Brain, section: "main" },
+  { title: "Products", href: "/products", icon: Sparkles, section: "main", showBadge: true },
+  { title: "Recommendations", href: "/recommendations", icon: Lightbulb, section: "analyse" },
+  { title: "Simulation", href: "/simulation", icon: Sparkles, section: "analyse" },
+  { title: "Reports", href: "/reports", icon: FileText, section: "analyse" },
+  { title: "Settings", href: "/settings", icon: Settings, section: "account" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  const router =
+    useRouter();
+
+  const [loading,
+    setLoading] =
+    useState(false);
 
   // Derive critical count from real analyses for the Products badge
   const { data: analyses } = useQuery({
@@ -36,7 +54,7 @@ export default function Sidebar() {
   const criticalCount =
     analyses?.filter((a: any) => a.scores?.overallScore < 60).length ?? 0;
 
-  const mainLinks    = links.filter((l) => l.section === "main");
+  const mainLinks = links.filter((l) => l.section === "main");
   const analyseLinks = links.filter((l) => l.section === "analyse");
   const accountLinks = links.filter((l) => l.section === "account");
 
@@ -87,6 +105,43 @@ export default function Sidebar() {
         {active && !badge && <ChevronRight size={12} style={{ opacity: 0.5 }} />}
       </Link>
     );
+  };
+
+  /*
+ =====================================
+ CONNECT DEMO WORKSPACE
+ =====================================
+*/
+
+const handleConnectStore =
+  async () => {
+
+    try {
+
+      setLoading(true);
+
+      await setupDemoWorkspace();
+
+      router.refresh();
+
+      alert(
+        "Workspace connected successfully"
+      );
+
+    } catch (error: any) {
+
+      alert(
+
+        error.response?.data
+          ?.message ||
+
+        "Failed to connect workspace"
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
   };
 
   return (
@@ -167,7 +222,7 @@ export default function Sidebar() {
         <div className="sidebar-logo">
           <span className="logo-dot" />
           <div>
-            <div className="logo-text">AROpt</div>
+            <div className="logo-text">Merchanta AI</div>
             <div className="logo-sub">AI Commerce Intelligence</div>
           </div>
         </div>
@@ -185,12 +240,31 @@ export default function Sidebar() {
 
         {/* Store chip — shows active store with live status dot */}
         <div className="sidebar-footer">
-          <div className="store-chip">
+          <div
+            className="store-chip"
+            onClick={handleConnectStore}
+          >
             <div className="store-avatar" />
+
             <div style={{ minWidth: 0 }}>
-              <div className="store-name">your-store</div>
-              <div className="store-url">myshopify.com</div>
+
+              <div className="store-name">
+
+                {
+                  loading
+                    ? "Connecting..."
+                    : "Connect Store"
+                }
+
+              </div>
+
+              <div className="store-url">
+
+                Launch AI demo workspace
+
+              </div>
             </div>
+
             <div className="store-status" />
           </div>
         </div>
