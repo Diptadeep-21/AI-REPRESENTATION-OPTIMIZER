@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-import random
 
 router = APIRouter()
 
@@ -71,6 +70,52 @@ def simulate(data: dict):
         []
     )
 
+    title_lower = title.lower()
+
+    """
+    =====================================
+    PRODUCT TYPE DETECTION
+    =====================================
+    """
+
+    is_accessory = any(
+        k in title_lower
+        for k in [
+            "wax",
+            "accessory",
+            "helmet",
+            "gear",
+        ]
+    )
+
+    is_minimal = any(
+        k in title_lower
+        for k in [
+            "minimal",
+            "basic",
+            "simple",
+        ]
+    )
+
+    is_premium = any(
+        k in title_lower
+        for k in [
+            "complete",
+            "premium",
+            "pro",
+            "advanced",
+        ]
+    )
+
+    is_beginner = any(
+        k in title_lower
+        for k in [
+            "hydrogen",
+            "starter",
+            "beginner",
+        ]
+    )
+
     """
     =====================================
     BASE SCORES
@@ -105,17 +150,17 @@ def simulate(data: dict):
 
     for token in query_tokens:
 
-        if token in title.lower():
-            semantic_match_score += 12
+        if token in title_lower:
+            semantic_match_score += 15
 
         if token in description:
-            semantic_match_score += 8
-
-        if token in category:
             semantic_match_score += 10
 
+        if token in category:
+            semantic_match_score += 12
+
         if token in tags:
-            semantic_match_score += 15
+            semantic_match_score += 18
 
     """
     =====================================
@@ -129,6 +174,7 @@ def simulate(data: dict):
         "premium",
         "luxury",
         "high-end",
+        "best",
     ]
 
     budget_keywords = [
@@ -142,6 +188,7 @@ def simulate(data: dict):
         "mountain",
         "trail",
         "hiking",
+        "winter",
     ]
 
     beginner_keywords = [
@@ -184,6 +231,76 @@ def simulate(data: dict):
 
     """
     =====================================
+    QUERY INTENT BOOSTING
+    =====================================
+    """
+
+    intent_bonus = 0
+
+    # ACCESSORY INTENT
+
+    if any(
+        k in query
+        for k in [
+            "accessory",
+            "accessories",
+            "wax",
+            "gear",
+        ]
+    ):
+
+        if is_accessory:
+            intent_bonus += 35
+        else:
+            intent_bonus -= 25
+
+    # MINIMAL INTENT
+
+    if any(
+        k in query
+        for k in [
+            "minimal",
+            "simple",
+            "basic",
+        ]
+    ):
+
+        if is_minimal:
+            intent_bonus += 30
+        else:
+            intent_bonus -= 20
+
+    # PREMIUM INTENT
+
+    if any(
+        k in query
+        for k in [
+            "premium",
+            "luxury",
+            "best",
+            "high-end",
+        ]
+    ):
+
+        if is_premium:
+            intent_bonus += 30
+
+    # BEGINNER INTENT
+
+    if any(
+        k in query
+        for k in [
+            "beginner",
+            "starter",
+            "affordable",
+        ]
+    ):
+
+        if is_beginner:
+            intent_bonus += 25
+
+    """
+    =====================================
     AI AGENT WEIGHTING
     =====================================
     """
@@ -222,6 +339,7 @@ def simulate(data: dict):
 
             overall_score
             + semantic_match_score
+            + intent_bonus
             + agent_bonus
             - gap_penalty,
 
@@ -377,6 +495,20 @@ def simulate(data: dict):
                 )
         })
 
+    if "beginner" in buyer_intent:
+
+        positives.append({
+
+            "title":
+                "Beginner Friendly",
+
+            "detail":
+                (
+                    "Product aligns well "
+                    "with beginner shoppers."
+                )
+        })
+
     """
     =====================================
     NEGATIVE REASONING
@@ -504,9 +636,11 @@ def simulate(data: dict):
 
         f"based on semantic relevance, "
 
+        f"buyer intent alignment, "
+
         f"metadata quality, "
 
-        f"and buyer intent alignment."
+        f"and AI commerce readiness."
     )
 
     """
