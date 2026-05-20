@@ -694,3 +694,36 @@ Frontend: https://merchanta-ai-frontend.vercel.app
 Backend: https://merchanta-ai-backend.onrender.com
 
 AI Engine: https://merchanta-ai-engine.onrender.com
+
+# Demo Video
+
+Project Demonstration Video:
+
+https://drive.google.com/file/d/17H3uhpGs5txSZq1H0oH7a-eEbBiOYtT3/view?usp=sharing
+
+---
+
+# Important Note for Evaluators
+
+The application is deployed using free-tier cloud services.
+
+As a result:
+
+- The Backend Server
+- The AI Engine Server
+
+may enter sleep mode after a few minutes of inactivity.
+
+If the application appears slow initially:
+
+1. Open the backend URL once
+2. Open the AI engine URL once
+3. Wait approximately 30–60 seconds for services to wake up
+
+After waking up, the application functions normally.
+
+Backend:
+https://merchanta-ai-backend.onrender.com/health
+
+AI Engine:
+https://merchanta-ai-engine.onrender.com/
