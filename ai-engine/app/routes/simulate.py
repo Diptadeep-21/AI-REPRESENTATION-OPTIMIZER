@@ -1,22 +1,139 @@
 from fastapi import APIRouter
 
+import re
+
 router = APIRouter()
+
+
+"""
+=========================================================
+TEXT NORMALIZATION
+=========================================================
+"""
+
+
+def normalize_text(text):
+
+    if not text:
+        return ""
+
+    text = text.lower()
+
+    text = re.sub(
+        r"<[^>]*>",
+        " ",
+        text
+    )
+
+    text = re.sub(
+        r"[^a-z0-9\s]",
+        " ",
+        text
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text
+    )
+
+    return text.strip()
+
+
+"""
+=========================================================
+INTENT DETECTION
+=========================================================
+"""
+
+
+INTENT_MAP = {
+
+    "minimal": [
+        "minimal",
+        "simple",
+        "basic",
+        "clean",
+    ],
+
+    "premium": [
+        "premium",
+        "luxury",
+        "best",
+        "high-end",
+        "professional",
+    ],
+
+    "beginner": [
+        "beginner",
+        "starter",
+        "easy",
+        "affordable",
+    ],
+
+    "accessory": [
+        "accessory",
+        "accessories",
+        "gear",
+        "wax",
+    ],
+
+    "winter": [
+        "winter",
+        "snow",
+        "outdoor",
+        "sports",
+    ],
+
+    "performance": [
+        "performance",
+        "advanced",
+        "pro",
+        "elite",
+    ],
+}
+
+
+def detect_query_intents(query):
+
+    query = normalize_text(query)
+
+    intents = []
+
+    for intent, keywords in INTENT_MAP.items():
+
+        for keyword in keywords:
+
+            if keyword in query:
+
+                intents.append(intent)
+
+                break
+
+    return intents
+
+
+"""
+=========================================================
+SIMULATION ROUTE
+=========================================================
+"""
 
 
 @router.post("/simulate")
 def simulate(data: dict):
 
     """
-    =====================================
+    =========================================================
     INPUTS
-    =====================================
+    =========================================================
     """
 
-    query = (
+    query = normalize_text(
         data.get(
             "query",
             ""
-        ).lower()
+        )
     )
 
     agent = data.get(
@@ -45,9 +162,9 @@ def simulate(data: dict):
     )
 
     """
-    =====================================
+    =========================================================
     PRODUCT DATA
-    =====================================
+    =========================================================
     """
 
     title = product.get(
@@ -55,254 +172,224 @@ def simulate(data: dict):
         "Unknown Product"
     )
 
-    description = product.get(
-        "description",
-        ""
-    ).lower()
-
-    category = product.get(
-        "category",
-        ""
-    ).lower()
-
-    tags = product.get(
-        "tags",
-        []
+    description = normalize_text(
+        product.get(
+            "description",
+            ""
+        )
     )
 
-    title_lower = title.lower()
-
-    """
-    =====================================
-    PRODUCT TYPE DETECTION
-    =====================================
-    """
-
-    is_accessory = any(
-        k in title_lower
-        for k in [
-            "wax",
-            "accessory",
-            "helmet",
-            "gear",
-        ]
+    category = normalize_text(
+        product.get(
+            "category",
+            ""
+        )
     )
 
-    is_minimal = any(
-        k in title_lower
-        for k in [
-            "minimal",
-            "basic",
-            "simple",
-        ]
+    tags = [
+
+        normalize_text(tag)
+
+        for tag in product.get(
+            "tags",
+            []
+        )
+    ]
+
+    vendor = normalize_text(
+        product.get(
+            "vendor",
+            ""
+        )
     )
 
-    is_premium = any(
-        k in title_lower
-        for k in [
-            "complete",
-            "premium",
-            "pro",
-            "advanced",
-        ]
+    product_type = normalize_text(
+        product.get(
+            "productType",
+            ""
+        )
     )
 
-    is_beginner = any(
-        k in title_lower
-        for k in [
-            "hydrogen",
-            "starter",
-            "beginner",
-        ]
+    metadata = product.get(
+        "metadata",
+        {}
+    )
+
+    title_lower = normalize_text(
+        title
     )
 
     """
-    =====================================
-    BASE SCORES
-    =====================================
+    =========================================================
+    PRODUCT PROFILE
+    =========================================================
     """
 
-    overall_score = scores.get(
-        "overallScore",
-        50
-    )
+    combined_text = " ".join([
 
-    semantic_gaps = ai.get(
-        "semanticGaps",
-        []
-    )
+        title_lower,
+
+        description,
+
+        category,
+
+        vendor,
+
+        product_type,
+
+        " ".join(tags),
+    ])
 
     """
-    =====================================
-    QUERY TOKENIZATION
-    =====================================
+    =========================================================
+    QUERY TOKENS
+    =========================================================
     """
 
     query_tokens = query.split()
 
     """
-    =====================================
-    SEMANTIC MATCHING
-    =====================================
+    =========================================================
+    QUERY INTENTS
+    =========================================================
+    """
+
+    intents = detect_query_intents(
+        query
+    )
+
+    """
+    =========================================================
+    SEMANTIC MATCH SCORE
+    =========================================================
     """
 
     semantic_match_score = 0
 
     for token in query_tokens:
 
-        if token in title_lower:
-            semantic_match_score += 15
+        if token in combined_text:
 
-        if token in description:
-            semantic_match_score += 10
-
-        if token in category:
             semantic_match_score += 12
 
-        if token in tags:
-            semantic_match_score += 18
+    semantic_match_score = min(
+        semantic_match_score,
+        100
+    )
 
     """
-    =====================================
-    BUYER INTENT DETECTION
-    =====================================
+    =========================================================
+    METADATA QUALITY SCORE
+    =========================================================
     """
 
-    buyer_intent = []
+    metadata_quality = 0
 
-    premium_keywords = [
-        "premium",
-        "luxury",
-        "high-end",
-        "best",
-    ]
+    if description:
+        metadata_quality += 20
 
-    budget_keywords = [
-        "cheap",
-        "budget",
-        "affordable",
-    ]
+    if tags:
+        metadata_quality += 20
 
-    outdoor_keywords = [
-        "outdoor",
-        "mountain",
-        "trail",
-        "hiking",
-        "winter",
-    ]
+    if product.get("images"):
+        metadata_quality += 15
 
-    beginner_keywords = [
-        "beginner",
-        "starter",
-        "easy",
-    ]
+    if vendor:
+        metadata_quality += 10
 
-    if any(
-        k in query
-        for k in premium_keywords
-    ):
-        buyer_intent.append(
-            "premium"
-        )
+    if product_type:
+        metadata_quality += 10
 
-    if any(
-        k in query
-        for k in budget_keywords
-    ):
-        buyer_intent.append(
-            "budget"
-        )
+    if metadata.get("material"):
+        metadata_quality += 10
 
-    if any(
-        k in query
-        for k in outdoor_keywords
-    ):
-        buyer_intent.append(
-            "outdoor"
-        )
+    if metadata.get("terrain"):
+        metadata_quality += 15
 
-    if any(
-        k in query
-        for k in beginner_keywords
-    ):
-        buyer_intent.append(
-            "beginner"
-        )
+    metadata_quality = min(
+        metadata_quality,
+        100
+    )
 
     """
-    =====================================
-    QUERY INTENT BOOSTING
-    =====================================
+    =========================================================
+    INTENT BONUS
+    =========================================================
     """
 
     intent_bonus = 0
 
-    # ACCESSORY INTENT
+    is_minimal = (
+        "minimal" in combined_text
+    )
 
-    if any(
-        k in query
-        for k in [
-            "accessory",
-            "accessories",
-            "wax",
-            "gear",
-        ]
-    ):
+    is_premium = (
 
-        if is_accessory:
-            intent_bonus += 35
-        else:
-            intent_bonus -= 25
+        "premium" in combined_text
 
-    # MINIMAL INTENT
+        or
 
-    if any(
-        k in query
-        for k in [
-            "minimal",
-            "simple",
-            "basic",
-        ]
-    ):
+        product.get(
+            "price",
+            0
+        ) > 700
+    )
+
+    is_accessory = (
+
+        "accessory" in combined_text
+
+        or
+
+        "wax" in combined_text
+    )
+
+    is_beginner = (
+
+        "hydrogen" in combined_text
+
+        or
+
+        "starter" in combined_text
+    )
+
+    if "minimal" in intents:
 
         if is_minimal:
             intent_bonus += 30
         else:
-            intent_bonus -= 20
+            intent_bonus -= 10
 
-    # PREMIUM INTENT
-
-    if any(
-        k in query
-        for k in [
-            "premium",
-            "luxury",
-            "best",
-            "high-end",
-        ]
-    ):
+    if "premium" in intents:
 
         if is_premium:
-            intent_bonus += 30
+            intent_bonus += 25
 
-    # BEGINNER INTENT
+    if "accessory" in intents:
 
-    if any(
-        k in query
-        for k in [
-            "beginner",
-            "starter",
-            "affordable",
-        ]
-    ):
+        if is_accessory:
+            intent_bonus += 35
+        else:
+            intent_bonus -= 15
+
+    if "beginner" in intents:
 
         if is_beginner:
             intent_bonus += 25
 
+    if "winter" in intents:
+
+        if (
+            "winter" in combined_text
+            or
+            "snow" in combined_text
+        ):
+            intent_bonus += 15
+
     """
-    =====================================
-    AI AGENT WEIGHTING
-    =====================================
+    =========================================================
+    AI AGENT BONUS
+    =========================================================
     """
 
     agent_bonus = {
@@ -318,41 +405,66 @@ def simulate(data: dict):
     }.get(agent, 2)
 
     """
-    =====================================
-    GAP PENALTY
-    =====================================
+    =========================================================
+    BASE SCORE
+    =========================================================
     """
 
-    gap_penalty = (
-        len(semantic_gaps) * 3
+    overall_score = scores.get(
+        "overallScore",
+        55
     )
 
     """
-    =====================================
+    =========================================================
     FINAL SCORE
-    =====================================
+    =========================================================
     """
+
+    final_score = round(
+
+        (
+            overall_score * 0.40
+        )
+
+        +
+
+        (
+            semantic_match_score * 0.30
+        )
+
+        +
+
+        (
+            metadata_quality * 0.15
+        )
+
+        +
+
+        (
+            intent_bonus
+        )
+
+        +
+
+        (
+            agent_bonus
+        )
+
+    )
 
     final_score = max(
-
+        25,
         min(
-
-            overall_score
-            + semantic_match_score
-            + intent_bonus
-            + agent_bonus
-            - gap_penalty,
-
+            final_score,
             99
-        ),
-
-        20
+        )
     )
 
     """
-    =====================================
-    DYNAMIC VISIBILITY
-    =====================================
+    =========================================================
+    VISIBILITY
+    =========================================================
     """
 
     visibility = (
@@ -369,16 +481,10 @@ def simulate(data: dict):
     )
 
     """
-    =====================================
-    DETERMINISTIC RESULT SIZE
-    =====================================
+    =========================================================
+    TOTAL RESULTS
+    =========================================================
     """
-
-    query_complexity = len(
-        query_tokens
-    )
-
-    semantic_depth = len(tags)
 
     total_results = max(
 
@@ -388,30 +494,22 @@ def simulate(data: dict):
 
             25,
 
-            (
-                query_complexity * 2
-            )
+            len(query_tokens) * 2
 
             +
 
-            semantic_depth
+            len(tags)
 
             +
 
-            (
-                len(semantic_gaps)
-            )
-
-            +
-
-            5
+            8
         )
     )
 
     """
-    =====================================
-    DYNAMIC RANKING
-    =====================================
+    =========================================================
+    RANKING
+    =========================================================
     """
 
     ranked_at = max(
@@ -431,14 +529,85 @@ def simulate(data: dict):
     )
 
     """
-    =====================================
-    POSITIVES
-    =====================================
+    =========================================================
+    WHY IT RANKED
+    =========================================================
     """
 
     positives = []
 
-    if semantic_match_score >= 20:
+    if "minimal" in intents and is_minimal:
+
+        positives.append({
+
+            "title":
+                "Minimal Intent Match",
+
+            "detail":
+                (
+                    "Product strongly aligns "
+                    "with simplicity-focused "
+                    "buyer intent."
+                )
+        })
+
+    if "premium" in intents and is_premium:
+
+        positives.append({
+
+            "title":
+                "Premium Positioning",
+
+            "detail":
+                (
+                    "Product aligns with "
+                    "premium shopping behavior."
+                )
+        })
+
+    if "accessory" in intents and is_accessory:
+
+        positives.append({
+
+            "title":
+                "Accessory Search Match",
+
+            "detail":
+                (
+                    "Product strongly matches "
+                    "accessory-focused search intent."
+                )
+        })
+
+    if "beginner" in intents and is_beginner:
+
+        positives.append({
+
+            "title":
+                "Beginner Friendly Match",
+
+            "detail":
+                (
+                    "Product aligns well "
+                    "with beginner shoppers."
+                )
+        })
+
+    if "winter" in intents:
+
+        positives.append({
+
+            "title":
+                "Winter Sports Relevance",
+
+            "detail":
+                (
+                    "Product contains strong "
+                    "winter commerce relevance."
+                )
+        })
+
+    if semantic_match_score >= 35:
 
         positives.append({
 
@@ -448,205 +617,243 @@ def simulate(data: dict):
             "detail":
                 (
                     "Product strongly matches "
-                    "buyer search intent."
+                    "buyer search language."
                 )
         })
 
-    if overall_score >= 80:
+    if metadata_quality >= 60:
 
         positives.append({
 
             "title":
-                "High AI Readiness",
+                "Strong Metadata Quality",
 
             "detail":
                 (
-                    "Product metadata is "
-                    "well optimized for "
-                    "AI discovery."
+                    "Product metadata improves "
+                    "AI discoverability."
                 )
         })
-
-    if len(semantic_gaps) <= 2:
-
-        positives.append({
-
-            "title":
-                "Strong Metadata Coverage",
-
-            "detail":
-                (
-                    "Low semantic gap count "
-                    "improves discoverability."
-                )
-        })
-
-    if "premium" in buyer_intent:
-
-        positives.append({
-
-            "title":
-                "Premium Intent Match",
-
-            "detail":
-                (
-                    "Product aligns with "
-                    "premium buyer behavior."
-                )
-        })
-
-    if "beginner" in buyer_intent:
-
-        positives.append({
-
-            "title":
-                "Beginner Friendly",
-
-            "detail":
-                (
-                    "Product aligns well "
-                    "with beginner shoppers."
-                )
-        })
-
-    """
-    =====================================
-    NEGATIVE REASONING
-    =====================================
-    """
-
-    negatives = []
-
-    if len(semantic_gaps) >= 5:
-
-        negatives.append({
-
-            "title":
-                "Weak Semantic Coverage",
-
-            "detail":
-                (
-                    "Large semantic gaps "
-                    "reduce AI ranking confidence."
-                )
-        })
-
-    if semantic_match_score <= 10:
-
-        negatives.append({
-
-            "title":
-                "Low Query Relevance",
-
-            "detail":
-                (
-                    "Product weakly matches "
-                    "buyer search intent."
-                )
-        })
-
-    if overall_score < 60:
-
-        negatives.append({
-
-            "title":
-                "Poor Optimization Quality",
-
-            "detail":
-                (
-                    "Product metadata lacks "
-                    "strong AI optimization."
-                )
-        })
-
-    """
-    =====================================
-    FALLBACK POSITIVE
-    =====================================
-    """
 
     if len(positives) == 0:
 
         positives.append({
 
             "title":
-                "Moderate Commercial Relevance",
+                "General Commerce Relevance",
 
             "detail":
                 (
-                    "Product partially aligns "
-                    "with buyer shopping intent."
+                    "Product maintains moderate "
+                    "buyer-intent relevance."
                 )
         })
 
     """
-    =====================================
-    QUERY-AWARE GAPS
-    =====================================
+    =========================================================
+    NEGATIVE REASONING
+    =========================================================
+    """
+
+    negatives = []
+
+    if metadata_quality < 40:
+
+        negatives.append({
+
+            "title":
+                "Weak Metadata Structure",
+
+            "detail":
+                (
+                    "Limited product metadata "
+                    "reduces AI visibility."
+                )
+        })
+
+    if semantic_match_score < 15:
+
+        negatives.append({
+
+            "title":
+                "Low Query Alignment",
+
+            "detail":
+                (
+                    "Product weakly matches "
+                    "buyer search phrasing."
+                )
+        })
+
+    if not tags:
+
+        negatives.append({
+
+            "title":
+                "Limited Semantic Tags",
+
+            "detail":
+                (
+                    "Additional semantic tags "
+                    "could improve ranking."
+                )
+        })
+
+    """
+    =========================================================
+    DYNAMIC SEMANTIC GAPS
+    =========================================================
     """
 
     gaps = []
 
-    for token in query_tokens:
+    if not description:
 
-        if token in semantic_gaps:
+        gaps.append({
+
+            "title":
+                "Missing Product Description",
+
+            "detail":
+                (
+                    "Detailed descriptions would "
+                    "improve AI understanding."
+                )
+        })
+
+    if not tags:
+
+        gaps.append({
+
+            "title":
+                "Limited Semantic Coverage",
+
+            "detail":
+                (
+                    "Additional semantic tags "
+                    "could improve discoverability."
+                )
+        })
+
+    if not product.get("images"):
+
+        gaps.append({
+
+            "title":
+                "Missing Product Imagery",
+
+            "detail":
+                (
+                    "Visual product assets "
+                    "could improve commerce trust."
+                )
+        })
+
+    if "minimal" in intents:
+
+        gaps.append({
+
+            "title":
+                "Minimal Design Signals",
+
+            "detail":
+                (
+                    "Additional simplicity-focused "
+                    "descriptors could improve matching."
+                )
+        })
+
+    if "premium" in intents:
+
+        gaps.append({
+
+            "title":
+                "Luxury Commerce Signals",
+
+            "detail":
+                (
+                    "Advanced premium metadata "
+                    "could strengthen ranking."
+                )
+        })
+
+    if "accessory" in intents:
+
+        gaps.append({
+
+            "title":
+                "Compatibility Metadata",
+
+            "detail":
+                (
+                    "Accessory compatibility "
+                    "data is limited."
+                )
+        })
+
+    if "winter" in intents:
+
+        if not metadata.get("terrain"):
 
             gaps.append({
 
                 "title":
-                    token,
+                    "Terrain Optimization",
 
                 "detail":
                     (
-                        f"Missing '{token}' "
-                        f"semantic optimization "
-                        f"for this query."
-                    )
-            })
-
-    if len(gaps) == 0:
-
-        for gap in semantic_gaps[:4]:
-
-            gaps.append({
-
-                "title":
-                    gap,
-
-                "detail":
-                    (
-                        f"Missing '{gap}' "
-                        f"semantic optimization."
+                        "Terrain-specific optimization "
+                        "data is missing."
                     )
             })
 
     """
-    =====================================
-    DYNAMIC REASONING
-    =====================================
+    =========================================================
+    REMOVE DUPLICATE GAPS
+    =========================================================
+    """
+
+    unique_gaps = []
+
+    seen = set()
+
+    for gap in gaps:
+
+        if gap["title"] not in seen:
+
+            unique_gaps.append(gap)
+
+            seen.add(gap["title"])
+
+    gaps = unique_gaps[:5]
+
+    """
+    =========================================================
+    RANKING REASON
+    =========================================================
     """
 
     ranking_reason = (
 
         f"{title} achieved "
 
-        f"{visibility} AI visibility "
+        f"{visibility} visibility "
 
         f"for '{query}' "
 
-        f"based on semantic relevance, "
+        f"due to semantic relevance, "
 
-        f"buyer intent alignment, "
+        f"buyer-intent alignment, "
 
         f"metadata quality, "
 
-        f"and AI commerce readiness."
+        f"and AI-commerce optimization."
     )
 
     """
-    =====================================
+    =========================================================
     FINAL RESPONSE
-    =====================================
+    =========================================================
     """
 
     return {
@@ -691,10 +898,10 @@ def simulate(data: dict):
             ),
 
         "positives":
-            positives,
+            positives[:4],
 
         "negatives":
-            negatives,
+            negatives[:3],
 
         "gaps":
             gaps,
