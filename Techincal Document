@@ -1,0 +1,478 @@
+Merchanta AI — Technical Documentation
+Version
+
+1.0
+
+Product
+
+Merchanta AI
+
+Document Type
+
+Technical System Documentation
+
+1. Introduction
+1.1 Overview
+
+Merchanta AI is an AI-powered ecommerce intelligence platform that helps merchants understand how AI systems like ChatGPT, Gemini, Perplexity, and AI shopping agents perceive, rank, and recommend their products.
+
+The platform combines:
+
+Shopify ingestion pipelines
+AI semantic analysis
+Conversational shopping simulation
+Vector retrieval systems
+Recommendation readiness scoring
+AI-generated optimization insights
+2. High-Level System Architecture
+                    ┌────────────────────┐
+                    │   Merchant User    │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Frontend Dashboard │
+                    │  Next.js + React   │
+                    └─────────┬──────────┘
+                              │ API Calls
+                              ▼
+                    ┌────────────────────┐
+                    │   Backend Server   │
+                    │ Node.js + Express  │
+                    └─────────┬──────────┘
+                              │
+         ┌────────────────────┼────────────────────┐
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌────────────────┐  ┌──────────────────┐  ┌────────────────┐
+│ Shopify APIs   │  │ MongoDB Database │  │ Redis Cache    │
+└────────────────┘  └──────────────────┘  └────────────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │    AI Engine       │
+                    │ Python + FastAPI   │
+                    └─────────┬──────────┘
+                              │
+         ┌────────────────────┼────────────────────┐
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌────────────────┐ ┌──────────────────┐ ┌────────────────┐
+│ Embeddings     │ │ Vector Database  │ │ RAG Pipelines  │
+└────────────────┘ └──────────────────┘ └────────────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Recommendation     │
+                    │ & Scoring Engine   │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Analytics & Reports│
+                    └────────────────────┘
+3. Frontend Architecture
+3.1 Technology Stack
+Technology	Purpose
+Next.js	Frontend Framework
+React	UI Component System
+TypeScript	Type Safety
+Tailwind CSS	Styling
+Axios	API Communication
+Chart Libraries	Data Visualization
+3.2 Frontend Folder Structure
+/frontend
+│
+├── components
+├── pages
+├── layouts
+├── services
+├── hooks
+├── contexts
+├── utils
+├── styles
+└── types
+3.3 Frontend Workflow
+Merchant Login
+      ↓
+Dashboard Access
+      ↓
+Store Connection
+      ↓
+Analytics Visualization
+      ↓
+Simulation Testing
+      ↓
+Recommendation Review
+      ↓
+Report Export
+4. Backend Architecture
+4.1 Technology Stack
+Technology	Purpose
+Node.js	Runtime Environment
+Express.js	REST APIs
+MongoDB	Database
+Mongoose	ODM
+JWT	Authentication
+Redis	Caching & Queues
+4.2 Backend Folder Structure
+/backend
+│
+├── controllers
+├── routes
+├── middleware
+├── models
+├── services
+├── integrations
+├── jobs
+├── queues
+├── utils
+└── config
+4.3 Backend Service Architecture
+                 ┌─────────────────┐
+                 │ API Gateway     │
+                 └────────┬────────┘
+                          │
+        ┌─────────────────┼─────────────────┐
+        │                 │                 │
+        ▼                 ▼                 ▼
+┌──────────────┐ ┌────────────────┐ ┌──────────────┐
+│ Auth Service │ │ Store Service  │ │ Report Svc  │
+└──────────────┘ └────────────────┘ └──────────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ Analysis Service│
+                 └────────┬────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ AI Engine API   │
+                 └─────────────────┘
+5. Shopify Integration Architecture
+5.1 Shopify Data Flow
+Merchant Store
+      ↓
+OAuth Authentication
+      ↓
+Access Token Generation
+      ↓
+Shopify API Calls
+      ↓
+Product Data Fetching
+      ↓
+Normalization Pipeline
+      ↓
+Database Storage
+      ↓
+AI Processing
+5.2 Imported Shopify Resources
+Products
+Collections
+Metadata
+Reviews
+Product Tags
+Pricing
+Policies
+Inventory
+6. Database Architecture
+6.1 Database Design
+                    ┌──────────────┐
+                    │ Users        │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │ Stores       │
+                    └──────┬───────┘
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+ │ Products     │ │ Simulations  │ │ Reports      │
+ └──────────────┘ └──────────────┘ └──────────────┘
+6.2 Product Schema Example
+{
+  "_id": "ObjectId",
+  "storeId": "ObjectId",
+  "title": "Gaming Laptop",
+  "description": "High performance gaming laptop",
+  "metadata": {},
+  "collections": [],
+  "visibilityScore": 85,
+  "trustScore": 90,
+  "recommendationReadiness": 88
+}
+7. AI Engine Architecture
+7.1 AI Technology Stack
+Technology	Purpose
+Python	AI Runtime
+FastAPI	AI APIs
+LangChain	AI Orchestration
+OpenAI APIs	LLM Processing
+Sentence Transformers	Embeddings
+Vector Database	Semantic Retrieval
+7.2 AI Engine Flow
+Product Data
+      ↓
+Data Cleaning
+      ↓
+Embedding Generation
+      ↓
+Vector Storage
+      ↓
+Semantic Analysis
+      ↓
+LLM Evaluation
+      ↓
+Scoring Engine
+      ↓
+Recommendations
+8. Embedding & Vector Architecture
+8.1 Embedding Pipeline
+Product Title
+Product Description
+Metadata
+Reviews
+Tags
+      ↓
+Embedding Model
+      ↓
+Dense Vector Creation
+      ↓
+Vector Database Storage
+8.2 Vector Retrieval Architecture
+Customer Query
+      ↓
+Query Embedding
+      ↓
+Vector Similarity Search
+      ↓
+Relevant Product Retrieval
+      ↓
+AI Ranking Evaluation
+9. RAG Architecture
+9.1 Retrieval-Augmented Generation Flow
+Customer Prompt
+      ↓
+Embedding Generation
+      ↓
+Vector Search
+      ↓
+Context Retrieval
+      ↓
+Prompt Construction
+      ↓
+LLM Processing
+      ↓
+AI Recommendation Output
+10. AI Visibility Scoring System
+10.1 Scoring Pipeline
+Product Information
+      ↓
+Semantic Evaluation
+      ↓
+Trust Analysis
+      ↓
+Metadata Validation
+      ↓
+Conversational Readiness
+      ↓
+Weighted Scoring
+      ↓
+Final AI Visibility Score
+10.2 Scoring Metrics
+Metric	Description
+Semantic Clarity	AI Understanding Quality
+Trust Signals	Reliability Indicators
+Metadata Completeness	Structured Data Quality
+Conversational Relevance	Query Compatibility
+Recommendation Readiness	AI Recommendation Suitability
+11. AI Shopping Simulation Architecture
+11.1 Simulation Workflow
+Merchant Prompt
+      ↓
+Semantic Query Processing
+      ↓
+Embedding Search
+      ↓
+Relevant Product Retrieval
+      ↓
+LLM Reasoning
+      ↓
+Ranking Evaluation
+      ↓
+Confidence Scoring
+      ↓
+Simulation Result
+11.2 Example Queries
+"Best gaming laptop under $1000"
+
+"Affordable ergonomic office chair"
+
+"Luxury vegan skincare set"
+12. Recommendation Engine Architecture
+12.1 Recommendation Pipeline
+AI Analysis Results
+      ↓
+Weakness Detection
+      ↓
+Optimization Mapping
+      ↓
+Recommendation Generation
+      ↓
+Merchant Insights Dashboard
+12.2 Recommendation Categories
+Metadata Optimization
+Semantic Improvement
+Trust Signal Enhancement
+Description Rewriting
+Conversational Optimization
+Product Comparison Readiness
+13. REST API Architecture
+13.1 Authentication APIs
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+13.2 Store APIs
+POST /api/store/connect
+GET  /api/store/details
+GET  /api/store/products
+13.3 Analysis APIs
+POST /api/analysis/run
+GET  /api/analysis/results
+GET  /api/analysis/product/:id
+13.4 Simulation APIs
+POST /api/simulation/run
+GET  /api/simulation/history
+14. Queue & Background Job Architecture
+14.1 Queue System Flow
+New Product Data
+      ↓
+Queue Creation
+      ↓
+Background Worker
+      ↓
+Embedding Generation
+      ↓
+AI Evaluation
+      ↓
+Score Calculation
+      ↓
+Database Update
+14.2 Queue Technologies
+Technology	Purpose
+BullMQ	Queue Management
+Redis	Queue Backend
+15. Security Architecture
+15.1 Security Flow
+User Authentication
+      ↓
+JWT Validation
+      ↓
+API Authorization
+      ↓
+Input Sanitization
+      ↓
+Secure API Access
+15.2 Security Features
+JWT Authentication
+HTTPS Encryption
+OAuth Validation
+Input Sanitization
+Rate Limiting
+Secure Environment Variables
+Encrypted Tokens
+16. Deployment Architecture
+16.1 Cloud Infrastructure
+                 ┌─────────────────┐
+                 │   Vercel CDN    │
+                 └────────┬────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ Frontend App    │
+                 └────────┬────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ Backend APIs    │
+                 └────────┬────────┘
+                          │
+        ┌─────────────────┼─────────────────┐
+        │                 │                 │
+        ▼                 ▼                 ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│ MongoDB      │ │ Redis        │ │ AI Engine    │
+│ Atlas        │ │ Cache        │ │ GPU Instance │
+└──────────────┘ └──────────────┘ └──────────────┘
+16.2 Deployment Stack
+Layer	Technology
+Frontend Hosting	Vercel
+Backend Hosting	AWS / Render
+Database	MongoDB Atlas
+AI Engine	GPU Cloud Instance
+CDN	Cloudflare
+Vector DB	Pinecone / Weaviate
+17. Monitoring & Observability
+17.1 Monitoring Architecture
+Application Logs
+      ↓
+Monitoring Tools
+      ↓
+Metrics Aggregation
+      ↓
+Alerting System
+      ↓
+Developer Dashboard
+17.2 Monitoring Tools
+Tool	Purpose
+Sentry	Error Tracking
+Grafana	Monitoring Dashboard
+Prometheus	Metrics
+Logtail	Log Aggregation
+18. Scalability Architecture
+18.1 Horizontal Scaling
+                 ┌─────────────────┐
+                 │ Load Balancer   │
+                 └────────┬────────┘
+                          │
+         ┌────────────────┼────────────────┐
+         │                │                │
+         ▼                ▼                ▼
+ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+ │ Backend 1   │ │ Backend 2   │ │ Backend 3   │
+ └─────────────┘ └─────────────┘ └─────────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ Shared Database │
+                 └─────────────────┘
+19. Future Technical Enhancements
+Planned Improvements
+Multi-Platform Ecommerce Support
+WooCommerce
+Magento
+BigCommerce
+Amazon Marketplace
+Advanced AI Features
+AI-generated product optimization
+Real-time ranking monitoring
+Personalized merchant copilots
+Competitor benchmarking
+Fine-tuned recommendation models
+20. Conclusion
+
+Merchanta AI is a scalable AI-native ecommerce intelligence platform built to help merchants optimize for AI-driven shopping ecosystems.
+
+The architecture combines:
+
+Full-stack web systems
+Semantic AI pipelines
+RAG architectures
+Embedding retrieval systems
+Conversational commerce simulations
+AI recommendation intelligence
+
+The platform is designed for future-ready AI commerce optimization at scale.
