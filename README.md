@@ -110,6 +110,7 @@ The system combines:
 ---
 
 # Workflow
+![Diagram](docs/worklflow.png)
 
 ## 1. Connect Store
 
