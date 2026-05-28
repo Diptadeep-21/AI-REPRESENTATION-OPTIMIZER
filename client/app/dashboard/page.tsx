@@ -76,7 +76,7 @@ export default function DashboardPage() {
     queryFn: getAllAnalyses,
   });
 
-  // ── Scores from backend ──────────────────────────────────────────────────
+  // ── Scores from backend ─────────────────────────────────────────────
   const aiReadinessScore = data?.scores?.semanticScore || 0;
   const discoverabilityScore = data?.scores?.discoverabilityScore || 0;
   const trustScore = data?.scores?.trustScore || 0;
