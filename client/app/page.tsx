@@ -66,9 +66,9 @@ const FEATURES = [
 
 const BARS = [
   { label: "Product descriptions", val: 88, color: "#3ecf8e" },
-  { label: "Structured data",      val: 62, color: "#e8a838" },
-  { label: "Brand voice",          val: 75, color: "#8c8a83" },
-  { label: "Image alt text",       val: 41, color: "#e05555" },
+  { label: "Structured data", val: 62, color: "#e8a838" },
+  { label: "Brand voice", val: 75, color: "#8c8a83" },
+  { label: "Image alt text", val: 41, color: "#e05555" },
 ];
 
 export default function HomePage() {
@@ -77,10 +77,10 @@ export default function HomePage() {
   const [barsAnimated, setBarsAnimated] = useState(false);
 
   const featuresRef = useRef<HTMLElement>(null);
-  const howRef      = useRef<HTMLElement>(null);
-  const pricingRef  = useRef<HTMLElement>(null);
-  const frameRef    = useRef<HTMLDivElement>(null);
-  const router      = useRouter();
+  const howRef = useRef<HTMLElement>(null);
+  const pricingRef = useRef<HTMLElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Rotating word in hero
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function HomePage() {
   };
 
   const handleDashboardAccess = () => router.push(isAuthenticated() ? "/dashboard" : "/login");
-  const handleGetStarted      = () => router.push(isAuthenticated() ? "/dashboard" : "/register");
+  const handleGetStarted = () => router.push(isAuthenticated() ? "/dashboard" : "/register");
 
   return (
     <>
@@ -541,10 +541,12 @@ export default function HomePage() {
         </div>
         <h1 className="hero-h1">
           Your store, through<br />
-          the eyes of{" "}
-          <em className={`hero-em${wordVisible ? "" : " hidden"}`}>
-            {WORDS[wordIndex]}
-          </em>
+          <span className="hero-line">
+            the eyes of{" "}
+            <em className={`hero-em${wordVisible ? "" : " hidden"}`}>
+              {WORDS[wordIndex]}
+            </em>
+          </span>
         </h1>
         <p className="hero-desc">
           LLM-powered shopping agents now decide what customers discover. Understand how they read your Shopify store — and win more of that traffic.
@@ -652,9 +654,9 @@ export default function HomePage() {
         <h2 className="sec-h reveal d1">Up and running in minutes</h2>
         <div className="steps-row">
           {[
-            { n: "01", title: "Connect your store",  desc: "Install the Shopify app or paste your store URL. We index your entire catalog instantly.",                            icon: <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--ink3)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /> },
-            { n: "02", title: "AI scans everything", desc: "Our models simulate how GPT, Gemini, and Perplexity agents perceive your storefront.",                               icon: <><circle cx="8" cy="8" r="5" stroke="var(--ink3)" strokeWidth="1.4" fill="none" /><path d="M8 5.5v2.5l1.5 1.5" stroke="var(--ink3)" strokeWidth="1.4" strokeLinecap="round" /></> },
-            { n: "03", title: "Act on insights",     desc: "Apply recommendations directly from the dashboard and watch your score climb.",                                       icon: <path d="M3 10l3-3 2.5 2.5L13 5" stroke="var(--ink3)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /> },
+            { n: "01", title: "Connect your store", desc: "Install the Shopify app or paste your store URL. We index your entire catalog instantly.", icon: <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--ink3)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /> },
+            { n: "02", title: "AI scans everything", desc: "Our models simulate how GPT, Gemini, and Perplexity agents perceive your storefront.", icon: <><circle cx="8" cy="8" r="5" stroke="var(--ink3)" strokeWidth="1.4" fill="none" /><path d="M8 5.5v2.5l1.5 1.5" stroke="var(--ink3)" strokeWidth="1.4" strokeLinecap="round" /></> },
+            { n: "03", title: "Act on insights", desc: "Apply recommendations directly from the dashboard and watch your score climb.", icon: <path d="M3 10l3-3 2.5 2.5L13 5" stroke="var(--ink3)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /> },
           ].map(({ n, title, desc, icon }, i) => (
             <div className={`step-card reveal d${i + 1}`} key={n}>
               <div className="step-icon-box">
