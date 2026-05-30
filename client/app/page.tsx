@@ -548,7 +548,7 @@ export default function HomePage() {
         <h1 className="hero-h1">
           Your store, through<br />
           <span className="hero-line">
-            the eyes of{" "}
+            the eyes of {" "}
             <em className={`hero-em${wordVisible ? "" : " hidden"}`}>
               {WORDS[wordIndex]}
             </em>
