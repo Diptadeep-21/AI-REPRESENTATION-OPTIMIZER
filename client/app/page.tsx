@@ -257,9 +257,15 @@ export default function HomePage() {
           margin-bottom: 22px;
           animation: heroIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both;
         }
+        .hero-line {
+          display: inline-flex;
+          align-items: baseline;
+          white-space: nowrap;
+        }
         .hero-em {
           font-style: italic; color: var(--ink2);
           display: inline-block;
+          min-width: 11ch;
           transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .hero-em.hidden { opacity: 0; transform: translateY(6px); }
