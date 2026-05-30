@@ -261,6 +261,7 @@ export default function HomePage() {
           display: inline-flex;
           align-items: baseline;
           white-space: nowrap;
+          gap: 0.2em;
         }
         .hero-em {
           font-style: italic; color: var(--ink2);
