@@ -525,7 +525,7 @@ export default function HomePage() {
 
       {/* ── NAV ── */}
       <nav className="nav">
-        <div className="nav-logo">Merchanta</div>
+        <div className="nav-logo">Merchanta AI</div>
         <div className="nav-r">
           <button className="nav-link" onClick={() => scrollTo(featuresRef)}>Features</button>
           <button className="nav-link" onClick={() => scrollTo(pricingRef)}>Pricing</button>
@@ -733,7 +733,7 @@ export default function HomePage() {
 
       {/* ── FOOTER ── */}
       <footer>
-        <div className="f-logo">Merchanta</div>
+        <div className="f-logo">Merchanta AI</div>
         <div className="f-copy">© 2025 Merchanta AI. All rights reserved.</div>
       </footer>
     </>
