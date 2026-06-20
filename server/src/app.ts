@@ -52,34 +52,59 @@ const app =
  =====================================
 */
 
-app.use(cors());
-
-app.use((req, res, next) => {
-
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://merchanta-ai-frontend.vercel.app"
-  );
-
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-
-  if (req.method === "OPTIONS") {
-
-    return res.sendStatus(200);
-  }
-
-  next();
-});
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://merchanta-ai-frontend.vercel.app",
+    ],
+    credentials: true,
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "OPTIONS",
+    ],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
+  })
+);
+
+
+// app.use(cors());
+
+// app.use((req, res, next) => {
+
+//   res.header(
+//     "Access-Control-Allow-Origin",
+//     "https://merchanta-ai-frontend.vercel.app"
+//   );
+
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, DELETE, OPTIONS"
+//   );
+
+//   if (req.method === "OPTIONS") {
+
+//     return res.sendStatus(200);
+//   }
+
+//   next();
+// });
+
+// app.use(express.json());
 
 /*
  =====================================
@@ -102,6 +127,7 @@ app.get(
     });
   }
 );
+
 
 /*
  =====================================

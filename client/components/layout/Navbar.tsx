@@ -1,34 +1,23 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { Bell, RefreshCw, Download } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bell, RefreshCw, LogOut } from "lucide-react";
 import { useState } from "react";
-import axios from "axios";
-
-import {
-  LogOut,
-} from "lucide-react";
-
-import {
-  useAuth,
-} from "@/providers/AuthProvider";
+import { useAuth } from "@/providers/AuthProvider";
 
 const PAGE_META: Record<string, { title: string; sub: string }> = {
-  "/dashboard": { title: "AI Commerce Overview", sub: "Monitor how AI shopping agents perceive your store" },
-  "/analysis": { title: "AI Visibility Analysis", sub: "Deep-dive into how agents rank your products" },
-  "/simulation": { title: "Agent Simulation", sub: "Simulate real AI shopping agent queries" },
-  "/reports": { title: "Reports", sub: "Export and share visibility insights" },
-  "/settings": { title: "Settings", sub: "Manage your store connection and preferences" },
+  "/dashboard":   { title: "AI Commerce Overview", sub: "Monitor how AI shopping agents perceive your store" },
+  "/analysis":    { title: "AI Visibility Analysis", sub: "Deep-dive into how agents rank your products" },
+  "/simulation":  { title: "Agent Simulation", sub: "Simulate real AI shopping agent queries" },
+  "/reports":     { title: "Reports", sub: "Export and share visibility insights" },
+  "/settings":    { title: "Settings", sub: "Manage your store connection and preferences" },
 };
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [scanning, setScanning] = useState(false);
-
-  const {
-    user,
-    logout,
-  } = useAuth();
+  const { user, logout } = useAuth();
 
   const meta = PAGE_META[pathname] ?? { title: "AI Optimizer", sub: "AI Commerce Intelligence" };
 
@@ -38,225 +27,117 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-
     logout();
-
-    window.location.href =
-      "/login";
+    window.location.href = "/login";
   };
-
-  /*
- =====================================
- EXPORT DASHBOARD ANALYTICS
- =====================================
-*/
-
-  const handleExport =
-    async () => {
-
-      try {
-
-        /*
-         =====================================
-         GET TOKEN
-         =====================================
-        */
-
-        const token =
-          localStorage.getItem(
-            "token"
-          );
-
-        /*
-         =====================================
-         FETCH REPORT DATA
-         =====================================
-        */
-
-        const response =
-          await axios.get(
-
-            `${process.env.NEXT_PUBLIC_API_URL}/api/reports/overview`,
-
-            {
-              headers: {
-
-                Authorization:
-                  `Bearer ${token}`,
-              },
-            }
-          );
-
-        /*
-         =====================================
-         CREATE EXPORT FILE
-         =====================================
-        */
-
-        const blob =
-          new Blob(
-
-            [
-              JSON.stringify(
-
-                response.data,
-
-                null,
-
-                2
-              ),
-            ],
-
-            {
-              type:
-                "application/json",
-            }
-          );
-
-        /*
-         =====================================
-         CREATE DOWNLOAD LINK
-         =====================================
-        */
-
-        const url =
-          window.URL.createObjectURL(
-            blob
-          );
-
-        const link =
-          document.createElement(
-            "a"
-          );
-
-        link.href = url;
-
-        link.download =
-          `ai-report-${Date.now()}.json`;
-
-        document.body.appendChild(
-          link
-        );
-
-        link.click();
-
-        link.remove();
-
-        window.URL.revokeObjectURL(
-          url
-        );
-
-        alert(
-          "Report exported successfully"
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Export failed:",
-          error
-        );
-
-        alert(
-          "Failed to export report"
-        );
-      }
-    };
-
-
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+        :root {
+          --bg:         #111110;
+          --surface:    #1c1b1a;
+          --surface2:   #242321;
+          --surface3:   #2e2c2a;
+          --border:     rgba(255,255,255,0.07);
+          --border-mid: rgba(255,255,255,0.13);
+          --ink:        #f0ede8;
+          --ink2:       #8c8a83;
+          --ink3:       #504e49;
+          --green:      #3ecf8e;
+          --amber:      #e8a838;
+          --red:        #e05555;
+          --font-serif: 'DM Serif Display', serif;
+          --font:       'DM Sans', sans-serif;
+        }
 
         .navbar-root {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 0 32px;
-          height: 60px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
-          background: rgba(4,7,15,0.85);
-          backdrop-filter: blur(12px);
+          height: 72px; padding: 0 32px;
+          border-bottom: 1px solid var(--border);
+          background: rgba(17,17,16,0.85);
+          backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
           position: sticky; top: 0; z-index: 20;
-          gap: 16px;
+          gap: 24px;
         }
 
-        .navbar-left { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+        .navbar-left { min-width: 0; }
         .navbar-title {
-          font-family: 'Syne', sans-serif;
-          font-size: 16px; font-weight: 800;
-          letter-spacing: -0.03em; color: #e8edf5;
+          font-family: var(--font-serif); font-size: 21px;
+          letter-spacing: -0.02em; color: var(--ink); line-height: 1.2;
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .navbar-sub { font-size: 11.5px; color: #2d3748; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .navbar-sub {
+          margin-top: 3px; font-size: 12.5px; color: var(--ink3); font-weight: 300;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
 
         .navbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
         .sync-pill {
-          display: flex; align-items: center; gap: 6px;
-          font-size: 11px; color: #2d3748;
-          padding: 4px 10px; border-radius: 100px;
-          border: 1px solid rgba(255,255,255,0.05);
-          background: rgba(255,255,255,0.02);
+          display: flex; align-items: center; gap: 7px;
+          padding: 6px 12px; border-radius: 999px;
+          background: rgba(62,207,142,0.08); border: 1px solid rgba(62,207,142,0.18);
+          font-size: 11.5px; color: var(--green); font-weight: 400;
           white-space: nowrap;
         }
-        .sync-dot {
-          width: 5px; height: 5px; border-radius: 50%;
-          background: #16b98c;
-          box-shadow: 0 0 5px rgba(22,185,140,0.6);
-        }
+        .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
         .nb-btn {
-          display: inline-flex; align-items: center; gap: 6px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 12.5px; font-weight: 500;
-          padding: 7px 13px; border-radius: 8px;
-          cursor: pointer; border: none;
-          transition: all 0.15s; text-decoration: none;
+          display: inline-flex; align-items: center; gap: 7px;
+          font-family: var(--font); font-size: 12.5px; font-weight: 500;
+          border-radius: 9px; padding: 8px 15px; cursor: pointer;
+          transition: border-color 0.2s, color 0.2s, transform 0.2s, background 0.2s;
+          white-space: nowrap;
         }
         .nb-btn.ghost {
-          background: transparent;
-          border: 1px solid rgba(255,255,255,0.07);
-          color: #4a5568;
+          background: transparent; border: 1px solid var(--border); color: var(--ink2);
         }
-        .nb-btn.ghost:hover { border-color: rgba(255,255,255,0.12); color: #94a3b8; }
-
+        .nb-btn.ghost:hover { border-color: var(--border-mid); color: var(--ink); }
         .nb-btn.primary {
-          background: #4d7aff; color: #fff;
-          box-shadow: 0 0 0 0 rgba(77,122,255,0.4);
+          background: var(--ink); border: 1px solid var(--ink); color: var(--bg);
         }
-        .nb-btn.primary:hover {
-          opacity: 0.88;
-          box-shadow: 0 0 16px rgba(77,122,255,0.35);
-        }
+        .nb-btn.primary:hover { opacity: 0.85; transform: translateY(-1px); }
 
         .nb-icon-btn {
-          display: inline-flex; align-items: center; justify-content: center;
-          width: 34px; height: 34px; border-radius: 8px;
-          background: transparent;
-          border: 1px solid rgba(255,255,255,0.07);
-          color: #4a5568; cursor: pointer;
-          transition: all 0.15s; position: relative;
+          width: 36px; height: 36px; border-radius: 9px;
+          background: var(--surface); border: 1px solid var(--border);
+          display: flex; align-items: center; justify-content: center;
+          color: var(--ink2); cursor: pointer; transition: border-color 0.2s, color 0.2s;
+          position: relative; flex-shrink: 0;
         }
-        .nb-icon-btn:hover { border-color: rgba(255,255,255,0.12); color: #94a3b8; }
+        .nb-icon-btn:hover { border-color: var(--border-mid); color: var(--ink); }
 
         .notif-badge {
-          position: absolute; top: -3px; right: -3px;
-          width: 8px; height: 8px; border-radius: 50%;
-          background: #f0683a;
-          border: 1.5px solid #04070f;
+          position: absolute; top: 7px; right: 7px;
+          width: 6px; height: 6px; border-radius: 50%;
+          background: var(--red); border: 2px solid var(--bg);
         }
 
+        .nb-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
+
+        .user-block { display: flex; align-items: center; gap: 10px; }
+        .user-text { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
+        .user-name { font-size: 12.5px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+        .user-email { font-size: 10.5px; color: var(--ink3); white-space: nowrap; }
+
         .avatar-btn {
-          width: 32px; height: 32px; border-radius: 8px;
-          background: linear-gradient(135deg, #4d7aff 0%, #16b98c 100%);
-          border: none; cursor: pointer; flex-shrink: 0;
-          transition: opacity 0.15s;
+          width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+          background: rgba(62,207,142,0.12); border: 1px solid rgba(62,207,142,0.2);
+          display: flex; align-items: center; justify-content: center;
+          color: var(--green); font-family: var(--font-serif); font-size: 14px;
+          cursor: default;
         }
-        .avatar-btn:hover { opacity: 0.85; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
         .spinning { animation: spin 0.8s linear infinite; }
+
+        @media (max-width: 720px) {
+          .navbar-root { padding: 0 20px; }
+          .navbar-sub, .sync-pill, .user-text { display: none; }
+        }
       `}</style>
 
       <header className="navbar-root">
@@ -271,88 +152,31 @@ export default function Navbar() {
             Synced · just now
           </div>
 
-          <button
-            className="nb-btn ghost"
-            onClick={handleScan}
-            style={{ gap: 6 }}
-          >
-            <RefreshCw
-              size={13}
-              className={scanning ? "spinning" : ""}
-              style={{ transition: "none" }}
-            />
+          <button className="nb-btn ghost" onClick={handleScan}>
+            <RefreshCw size={13} className={scanning ? "spinning" : ""} />
             {scanning ? "Scanning…" : "Re-scan"}
           </button>
 
-          <button
-            className="nb-btn primary"
-            onClick={handleExport}
-          >
-            <Download size={13} />
-            Export
-          </button>
+          <div className="nb-divider" />
 
           <button className="nb-icon-btn">
-            <Bell size={14} />
+            <Bell size={15} />
             <span className="notif-badge" />
           </button>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                lineHeight: 1.1,
-              }}
-            >
-
-              <span
-                style={{
-                  fontSize: "12px",
-                  color: "#e8edf5",
-                  fontWeight: 600,
-                }}
-              >
-
-                {user?.name || "Merchant"}
-
-              </span>
-
-              <span
-                style={{
-                  fontSize: "10px",
-                  color: "#64748b",
-                }}
-              >
-
-                {user?.email}
-
-              </span>
+          <div className="user-block">
+            <div className="user-text">
+              <span className="user-name">{user?.name || "Merchant"}</span>
+              <span className="user-email">{user?.email}</span>
             </div>
 
-            <button
-              className="avatar-btn"
-              title="Merchant Account"
-            />
-
-            <button
-              className="nb-icon-btn"
-              onClick={handleLogout}
-              title="Logout"
-            >
-
-              <LogOut size={14} />
-
+            <button className="avatar-btn" title="Merchant account">
+              {user?.name?.charAt(0)?.toUpperCase() || "M"}
             </button>
 
+            <button className="nb-icon-btn" onClick={handleLogout} title="Logout">
+              <LogOut size={14} />
+            </button>
           </div>
         </div>
       </header>

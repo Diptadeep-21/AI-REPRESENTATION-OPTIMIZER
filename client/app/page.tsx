@@ -190,43 +190,98 @@ export default function HomePage() {
         .d6 { transition-delay: 0.41s; }
 
         /* ── NAV ── */
-        .nav {
-          position: sticky; top: 0; z-index: 100;
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 0 48px; height: 54px;
-          border-bottom: 1px solid var(--border);
-          background: rgba(17,17,16,0.85);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-        }
-        .nav-logo {
-          font-family: var(--font-serif);
-          font-size: 18px;
-          color: var(--ink);
-          letter-spacing: -0.01em;
-        }
-        .nav-r { display: flex; align-items: center; gap: 6px; }
-        .nav-link {
-          font-size: 13px; color: var(--ink2);
-          padding: 6px 14px; border-radius: 7px;
-          background: none; border: 1px solid var(--border);
-          cursor: pointer; font-family: var(--font);
-          transition: border-color 0.2s, color 0.2s;
-        }
-        .nav-link:hover { border-color: var(--border-mid); color: var(--ink); }
-        .nav-btn {
-          font-size: 13px; font-weight: 500;
-          color: var(--bg); background: var(--ink);
-          padding: 7px 16px; border-radius: 8px;
-          border: none; cursor: pointer; font-family: var(--font);
-          transition: opacity 0.2s;
-        }
-        .nav-btn:hover { opacity: 0.85; }
+.nav {
+  position: fixed;   /* ← change from sticky */
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 76px;
+  padding: 0 64px;
+
+  background: rgba(17,17,16,0.92);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.18);
+}
+
+.nav-r {
+  display: flex;
+  align-items: center;
+
+  /* increased spacing */
+  gap: 18px;
+}
+
+.nav-link {
+  font-size: 14px;
+  color: var(--ink2);
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  transition:
+    color .25s,
+    border-color .25s,
+    background .25s;
+}
+
+.nav-link:hover {
+  color: var(--ink);
+
+  background: rgba(255,255,255,.03);
+
+  border-color:
+    rgba(255,255,255,.08);
+}
+
+.nav-btn {
+  font-size: 14px;
+  font-weight: 500;
+
+  padding: 11px 22px;
+
+  border-radius: 12px;
+
+  background: var(--ink);
+
+  color: var(--bg);
+
+  transition:
+    transform .2s,
+    box-shadow .2s,
+    opacity .2s;
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 30px rgba(255,255,255,.12);
+
+  opacity: 1;
+}
 
         /* ── HERO ── */
         .hero {
-          padding: 96px 48px 80px;
-          max-width: 860px;
+          padding: 110px 64px 90px;
+          max-width: 1100px;
           margin: 0 auto;
         }
         .badge {
@@ -251,22 +306,15 @@ export default function HomePage() {
         }
         .hero-h1 {
           font-family: var(--font-serif);
-          font-size: clamp(42px, 6.5vw, 72px);
+          font-size: clamp(48px, 5.5vw, 80px);
           line-height: 1.05; letter-spacing: -0.025em;
-          color: var(--ink); max-width: 640px;
-          margin-bottom: 22px;
+          color: var(--ink); max-width: 780px;
+          margin-bottom: 24px;
           animation: heroIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both;
-        }
-        .hero-line {
-          display: inline-flex;
-          align-items: baseline;
-          white-space: nowrap;
-          gap: 0.2em;
         }
         .hero-em {
           font-style: italic; color: var(--ink2);
           display: inline-block;
-          min-width: 11ch;
           transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .hero-em.hidden { opacity: 0; transform: translateY(6px); }
@@ -275,8 +323,8 @@ export default function HomePage() {
           to   { opacity: 1; transform: translateY(0); }
         }
         .hero-desc {
-          font-size: 17px; color: var(--ink2); line-height: 1.7;
-          max-width: 460px; font-weight: 300; margin-bottom: 40px;
+          font-size: 18px; color: var(--ink2); line-height: 1.7;
+          max-width: 560px; font-weight: 300; margin-bottom: 44px;
           animation: heroIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both;
         }
         .hero-actions {
@@ -284,10 +332,10 @@ export default function HomePage() {
           animation: heroIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s both;
         }
         .btn-primary {
-          display: inline-flex; align-items: center; gap: 8px;
+          display: inline-flex; align-items: center; gap: 9px;
           background: var(--ink); color: var(--bg);
-          font-size: 14px; font-weight: 500;
-          padding: 11px 22px; border-radius: 9px;
+          font-size: 15px; font-weight: 500;
+          padding: 13px 26px; border-radius: 10px;
           border: none; cursor: pointer; font-family: var(--font);
           transition: opacity 0.2s, transform 0.2s;
           text-decoration: none;
@@ -296,10 +344,10 @@ export default function HomePage() {
         .btn-primary .arrow { transition: transform 0.2s; }
         .btn-primary:hover .arrow { transform: translateX(3px); }
         .btn-ghost {
-          display: inline-flex; align-items: center; gap: 8px;
+          display: inline-flex; align-items: center; gap: 9px;
           background: transparent; color: var(--ink2);
-          font-size: 14px; font-weight: 400;
-          padding: 11px 20px; border-radius: 9px;
+          font-size: 15px; font-weight: 400;
+          padding: 13px 22px; border-radius: 10px;
           border: 1px solid var(--border-mid); cursor: pointer;
           font-family: var(--font);
           transition: border-color 0.2s, color 0.2s, transform 0.2s;
@@ -307,25 +355,25 @@ export default function HomePage() {
         .btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: var(--ink); transform: translateY(-1px); }
 
         .proof {
-          display: flex; align-items: center; gap: 18px;
-          margin-top: 56px; padding-top: 56px;
+          display: flex; align-items: center; gap: 24px;
+          margin-top: 64px; padding-top: 64px;
           border-top: 1px solid var(--border);
           animation: heroIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.4s both;
           flex-wrap: wrap;
         }
-        .proof-stat { display: flex; flex-direction: column; gap: 3px; }
+        .proof-stat { display: flex; flex-direction: column; gap: 4px; }
         .ps-n {
           font-family: var(--font-serif);
-          font-size: 32px; color: var(--ink);
+          font-size: 38px; color: var(--ink);
           letter-spacing: -0.03em; line-height: 1;
         }
-        .ps-l { font-size: 12px; color: var(--ink3); }
-        .proof-div { width: 1px; height: 40px; background: var(--border); }
+        .ps-l { font-size: 13px; color: var(--ink3); }
+        .proof-div { width: 1px; height: 44px; background: var(--border); }
 
         /* ── DASHBOARD PREVIEW ── */
         .preview-wrap {
-          max-width: 860px; margin: 0 auto 112px;
-          padding: 0 48px;
+          max-width: 1100px; margin: 0 auto 120px;
+          padding: 0 64px;
           animation: heroIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s both;
         }
         .frame {
@@ -347,17 +395,17 @@ export default function HomePage() {
           border: 1px solid var(--border); border-radius: 6px;
           padding: 4px 12px; margin: 0 12px;
         }
-        .dash { display: grid; grid-template-columns: 180px 1fr; height: 380px; }
+        .dash { display: grid; grid-template-columns: 210px 1fr; height: 440px; }
         .sidebar {
           background: rgba(255,255,255,0.02);
           border-right: 1px solid var(--border);
-          padding: 16px 10px;
+          padding: 20px 12px;
           display: flex; flex-direction: column; gap: 2px;
         }
         .si {
-          display: flex; align-items: center; gap: 9px;
-          padding: 8px 11px; border-radius: 8px;
-          font-size: 12.5px; color: var(--ink3); cursor: default;
+          display: flex; align-items: center; gap: 10px;
+          padding: 9px 13px; border-radius: 8px;
+          font-size: 13px; color: var(--ink3); cursor: default;
           transition: background 0.2s, color 0.2s;
         }
         .si:hover { background: rgba(255,255,255,0.04); color: var(--ink2); }
@@ -367,21 +415,21 @@ export default function HomePage() {
         }
         .si-dot { width: 12px; height: 12px; border-radius: 3px; background: currentColor; opacity: 0.45; flex-shrink: 0; }
         .si.on .si-dot { opacity: 0.85; }
-        .dash-main { padding: 24px; display: flex; flex-direction: column; gap: 18px; overflow: hidden; }
-        .dash-title { font-family: var(--font-serif); font-size: 18px; color: var(--ink); letter-spacing: -0.01em; }
-        .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+        .dash-main { padding: 28px; display: flex; flex-direction: column; gap: 22px; overflow: hidden; }
+        .dash-title { font-family: var(--font-serif); font-size: 20px; color: var(--ink); letter-spacing: -0.01em; }
+        .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
         .stat {
-          background: var(--surface2); border-radius: 10px;
-          padding: 14px 16px; border: 1px solid var(--border);
+          background: var(--surface2); border-radius: 11px;
+          padding: 16px 18px; border: 1px solid var(--border);
           transition: border-color 0.2s;
         }
         .stat:hover { border-color: var(--border-mid); }
-        .stat-label { font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-        .stat-val { font-family: var(--font-serif); font-size: 28px; line-height: 1; letter-spacing: -0.03em; }
-        .stat-sub { font-size: 11px; color: var(--ink3); margin-top: 3px; }
-        .bars { display: flex; flex-direction: column; gap: 10px; }
-        .bar-row { display: flex; align-items: center; gap: 12px; }
-        .bar-label { font-size: 12px; color: var(--ink3); width: 150px; flex-shrink: 0; }
+        .stat-label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; }
+        .stat-val { font-family: var(--font-serif); font-size: 34px; line-height: 1; letter-spacing: -0.03em; }
+        .stat-sub { font-size: 12px; color: var(--ink3); margin-top: 4px; }
+        .bars { display: flex; flex-direction: column; gap: 12px; }
+        .bar-row { display: flex; align-items: center; gap: 14px; }
+        .bar-label { font-size: 13px; color: var(--ink3); width: 170px; flex-shrink: 0; }
         .bar-track {
           flex: 1; background: var(--surface2); border-radius: 99px;
           height: 5px; overflow: hidden; border: 1px solid var(--border);
@@ -395,55 +443,55 @@ export default function HomePage() {
         .bar-pct { font-size: 11.5px; color: var(--ink3); width: 28px; text-align: right; font-family: var(--font-mono); }
 
         /* ── SECTIONS ── */
-        .section { max-width: 860px; margin: 0 auto 100px; padding: 0 48px; }
+        .section { max-width: 1100px; margin: 0 auto 110px; padding: 0 64px; }
         .sec-eyebrow {
-          font-size: 11px; font-weight: 500;
+          font-size: 12px; font-weight: 500;
           letter-spacing: 0.1em; text-transform: uppercase;
-          color: var(--ink3); margin-bottom: 16px;
+          color: var(--ink3); margin-bottom: 18px;
         }
         .sec-h {
           font-family: var(--font-serif);
-          font-size: clamp(26px, 3.5vw, 42px);
-          letter-spacing: -0.025em; line-height: 1.12;
-          color: var(--ink); margin-bottom: 12px;
+          font-size: clamp(30px, 3.2vw, 48px);
+          letter-spacing: -0.025em; line-height: 1.1;
+          color: var(--ink); margin-bottom: 14px;
         }
-        .sec-p { font-size: 15px; color: var(--ink2); line-height: 1.65; max-width: 440px; font-weight: 300; }
+        .sec-p { font-size: 16px; color: var(--ink2); line-height: 1.65; max-width: 520px; font-weight: 300; }
 
         /* ── FEATURES (numbered list) ── */
         .feat-list { margin-top: 48px; border-top: 1px solid var(--border); }
         .feat-item {
-          display: grid; grid-template-columns: 44px 1fr;
-          padding: 22px 0; border-bottom: 1px solid var(--border);
+          display: grid; grid-template-columns: 54px 1fr;
+          padding: 26px 0; border-bottom: 1px solid var(--border);
           align-items: start; cursor: default;
         }
         .feat-item:hover .feat-title { color: var(--ink); }
-        .feat-num { font-family: var(--font-mono); font-size: 12px; color: var(--ink3); padding-top: 2px; }
-        .feat-title { font-size: 14px; font-weight: 500; margin-bottom: 5px; color: var(--ink2); transition: color 0.2s; }
-        .feat-desc { font-size: 13px; color: var(--ink3); line-height: 1.65; font-weight: 300; max-width: 520px; }
+        .feat-num { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink3); padding-top: 3px; }
+        .feat-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; color: var(--ink2); transition: color 0.2s; }
+        .feat-desc { font-size: 14px; color: var(--ink3); line-height: 1.65; font-weight: 300; max-width: 640px; }
 
         /* ── HOW IT WORKS ── */
-        .steps-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 48px; }
+        .steps-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 52px; }
         .step-card {
-          padding: 24px; background: var(--surface);
-          border: 1px solid var(--border); border-radius: 14px;
+          padding: 28px; background: var(--surface);
+          border: 1px solid var(--border); border-radius: 16px;
           transition: border-color 0.25s, transform 0.25s;
         }
         .step-card:hover { border-color: var(--border-mid); transform: translateY(-3px); }
         .step-icon-box {
-          width: 36px; height: 36px; border-radius: 9px;
+          width: 40px; height: 40px; border-radius: 10px;
           background: var(--surface2); border: 1px solid var(--border);
           display: flex; align-items: center; justify-content: center;
-          margin-bottom: 16px;
+          margin-bottom: 18px;
         }
-        .step-n { font-family: var(--font-mono); font-size: 11px; color: var(--ink3); margin-bottom: 8px; }
-        .step-t { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
-        .step-d { font-size: 13px; color: var(--ink3); line-height: 1.6; font-weight: 300; }
+        .step-n { font-family: var(--font-mono); font-size: 12px; color: var(--ink3); margin-bottom: 9px; }
+        .step-t { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+        .step-d { font-size: 14px; color: var(--ink3); line-height: 1.6; font-weight: 300; }
 
         /* ── PRICING ── */
-        .price-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 48px; }
+        .price-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 52px; }
         .pc {
           background: var(--surface); border: 1px solid var(--border);
-          border-radius: 16px; padding: 28px 24px;
+          border-radius: 18px; padding: 32px 28px;
           display: flex; flex-direction: column; position: relative;
           transition: border-color 0.25s, transform 0.25s;
         }
@@ -465,18 +513,18 @@ export default function HomePage() {
           text-transform: uppercase; color: var(--ink3); margin-bottom: 14px;
         }
         .pc.hl .pc-name { color: var(--sand-ink2); }
-        .pc-price { font-family: var(--font-serif); font-size: 44px; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
+        .pc-price { font-family: var(--font-serif); font-size: 50px; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
         .pc.hl .pc-price { color: var(--sand-ink); }
-        .pc-per { font-size: 12px; color: var(--ink3); margin: 5px 0 10px; }
+        .pc-per { font-size: 13px; color: var(--ink3); margin: 6px 0 11px; }
         .pc.hl .pc-per { color: var(--sand-ink2); }
-        .pc-desc { font-size: 12.5px; color: var(--ink2); line-height: 1.55; margin-bottom: 20px; font-weight: 300; }
+        .pc-desc { font-size: 13.5px; color: var(--ink2); line-height: 1.55; margin-bottom: 22px; font-weight: 300; }
         .pc.hl .pc-desc { color: var(--sand-ink2); }
-        .pc-div { height: 1px; background: var(--border); margin-bottom: 20px; }
+        .pc-div { height: 1px; background: var(--border); margin-bottom: 22px; }
         .pc.hl .pc-div { background: rgba(42,31,16,0.1); }
-        .pc-feats { flex: 1; display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+        .pc-feats { flex: 1; display: flex; flex-direction: column; gap: 11px; margin-bottom: 26px; }
         .pf {
-          display: flex; align-items: flex-start; gap: 8px;
-          font-size: 12.5px; color: var(--ink3); font-weight: 300; line-height: 1.5;
+          display: flex; align-items: flex-start; gap: 9px;
+          font-size: 13.5px; color: var(--ink3); font-weight: 300; line-height: 1.5;
         }
         .pc.hl .pf { color: var(--sand-ink2); }
         .pf-icon { flex-shrink: 0; margin-top: 2px; }
@@ -492,23 +540,23 @@ export default function HomePage() {
         .pc-btn.sand-btn { background: var(--sand-ink); color: var(--sand); border: none; }
 
         /* ── CTA ── */
-        .cta-wrap { max-width: 860px; margin: 0 auto 96px; padding: 0 48px; }
+        .cta-wrap { max-width: 1100px; margin: 0 auto 100px; padding: 0 64px; }
         .cta-inner {
           background: var(--surface); border: 1px solid var(--border);
-          border-radius: 20px; padding: 64px 56px;
+          border-radius: 22px; padding: 72px 64px;
           display: grid; grid-template-columns: 1fr auto;
-          gap: 48px; align-items: center;
+          gap: 56px; align-items: center;
         }
-        .cta-btns { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; min-width: 200px; }
+        .cta-btns { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; min-width: 220px; }
 
         /* ── FOOTER ── */
         footer {
           border-top: 1px solid var(--border);
-          padding: 24px 48px;
+          padding: 28px 64px;
           display: flex; justify-content: space-between; align-items: center;
         }
-        .f-logo { font-family: var(--font-serif); font-size: 16px; color: var(--ink3); }
-        .f-copy { font-size: 12px; color: var(--ink3); }
+        .f-logo { font-family: var(--font-serif); font-size: 17px; color: var(--ink3); }
+        .f-copy { font-size: 13px; color: var(--ink3); }
 
         /* ── SCROLLBAR ── */
         ::-webkit-scrollbar { width: 6px; }
@@ -516,11 +564,16 @@ export default function HomePage() {
         ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
 
         /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+          .nav { padding: 0 28px; }
+          .hero, .preview-wrap, .section, .cta-wrap { padding-left: 28px; padding-right: 28px; }
+          footer { padding: 24px 28px; }
+        }
         @media (max-width: 680px) {
           .nav { padding: 0 20px; }
           .nav-r .nav-link { display: none; }
           .hero, .preview-wrap, .section, .cta-wrap { padding-left: 20px; padding-right: 20px; }
-          .hero-h1 { font-size: 38px; }
+          .hero-h1 { font-size: 40px; }
           .stat-row, .steps-row, .price-grid { grid-template-columns: 1fr; }
           .dash { grid-template-columns: 1fr; }
           .sidebar { display: none; }
@@ -532,12 +585,55 @@ export default function HomePage() {
 
       {/* ── NAV ── */}
       <nav className="nav">
-        <div className="nav-logo">Merchanta AI</div>
-        <div className="nav-r">
-          <button className="nav-link" onClick={() => scrollTo(featuresRef)}>Features</button>
-          <button className="nav-link" onClick={() => scrollTo(pricingRef)}>Pricing</button>
-          <button className="nav-btn" onClick={handleDashboardAccess}>Open dashboard</button>
+
+        <div className="nav-logo">
+          Merchanta AI
         </div>
+
+        <div className="nav-r">
+
+          <button
+            className="nav-link"
+            onClick={() => scrollTo(featuresRef)}
+          >
+            Features
+          </button>
+
+          <button
+            className="nav-link"
+            onClick={() => scrollTo(howRef)}
+          >
+            How it works
+          </button>
+
+          <button
+            className="nav-link"
+            onClick={() => scrollTo(pricingRef)}
+          >
+            Pricing
+          </button>
+
+          <button
+            className="nav-link"
+          >
+            Customers
+          </button>
+
+          <button
+            className="nav-link"
+          >
+            Docs
+          </button>
+
+          <button
+            className="nav-btn"
+            onClick={handleDashboardAccess}
+          >
+            Open dashboard
+          </button>
+
+        </div>
+
       </nav>
 
       {/* ── HERO ── */}
@@ -548,12 +644,10 @@ export default function HomePage() {
         </div>
         <h1 className="hero-h1">
           Your store, through<br />
-          <span className="hero-line">
-            the eyes of {" "}
-            <em className={`hero-em${wordVisible ? "" : " hidden"}`}>
-              {WORDS[wordIndex]}
-            </em>
-          </span>
+          the eyes of{" "}
+          <em className={`hero-em${wordVisible ? "" : " hidden"}`}>
+            {WORDS[wordIndex]}
+          </em>
         </h1>
         <p className="hero-desc">
           LLM-powered shopping agents now decide what customers discover. Understand how they read your Shopify store — and win more of that traffic.

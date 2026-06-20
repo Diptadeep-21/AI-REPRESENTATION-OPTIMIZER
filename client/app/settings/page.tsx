@@ -2,127 +2,83 @@
 
 import { useState } from "react";
 
-// ─── Toggle switch ────────────────────────────────────────────────────────────
+// ── Toggle switch ────────────────────────────────────────────────────────────
 function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void }) {
   return (
-    <button onClick={onChange} role="switch" aria-checked={checked} style={{
-      width: 44, height: 24, borderRadius: 12, flexShrink: 0, border: "none",
-      background: checked ? "#4d7aff" : "rgba(255,255,255,0.08)",
-      outline: `1px solid ${checked ? "rgba(77,122,255,0.5)" : "rgba(255,255,255,0.10)"}`,
-      position: "relative", cursor: "pointer", transition: "all 0.2s",
-      boxShadow: checked ? "0 0 12px rgba(77,122,255,0.35)" : "none",
-    }}>
-      <span style={{
-        position: "absolute", top: 3, left: checked ? 22 : 3,
-        width: 16, height: 16, borderRadius: "50%", background: "#fff",
-        transition: "left 0.2s cubic-bezier(.4,0,.2,1)",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
-      }} />
+    <button className={`toggle${checked ? " on" : ""}`} onClick={onChange} role="switch" aria-checked={checked}>
+      <span className="toggle-knob" />
     </button>
   );
 }
 
-// ─── Status pill ──────────────────────────────────────────────────────────────
+// ── Status pill ──────────────────────────────────────────────────────────────
 function StatusPill({ online, label }: { online: boolean; label: string }) {
   return (
-    <div style={{
-      display: "inline-flex", alignItems: "center", gap: 6,
-      background: online ? "rgba(22,185,140,0.10)" : "rgba(240,104,58,0.10)",
-      border: `1px solid ${online ? "rgba(22,185,140,0.25)" : "rgba(240,104,58,0.25)"}`,
-      color: online ? "#16b98c" : "#f0683a",
-      fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 100, flexShrink: 0,
-    }}>
-      <span style={{
-        width: 6, height: 6, borderRadius: "50%",
-        background: online ? "#16b98c" : "#f0683a",
-        boxShadow: `0 0 6px ${online ? "rgba(22,185,140,0.6)" : "rgba(240,104,58,0.6)"}`,
-        animation: online ? "blink 2s ease infinite" : "none",
-      }} />
+    <div className={`status-pill${online ? " online" : " offline"}`}>
+      <span className="status-dot" />
       {label}
     </div>
   );
 }
 
-// ─── Section card ─────────────────────────────────────────────────────────────
-function Section({ icon, title, children }: { icon: string; title: string; children: React.ReactNode }) {
+// ── Section card ─────────────────────────────────────────────────────────────
+function Section({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <div style={{
-      background: "#0b1120", border: "1px solid rgba(255,255,255,0.07)",
-      borderRadius: 14, overflow: "hidden",
-    }}>
-      <div style={{
-        display: "flex", alignItems: "center", gap: 12,
-        padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.05)",
-      }}>
-        <div style={{
-          width: 34, height: 34, borderRadius: 9, fontSize: 16, flexShrink: 0,
-          background: "rgba(77,122,255,0.10)", border: "1px solid rgba(77,122,255,0.18)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>{icon}</div>
-        <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em" }}>{title}</div>
+    <div className="panel">
+      <div className="panel-hd">
+        <div className="panel-icon">{icon}</div>
+        <div className="panel-title">{title}</div>
       </div>
-      <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 14 }}>
-        {children}
-      </div>
+      <div className="panel-body">{children}</div>
     </div>
   );
 }
 
-// ─── Field wrapper ────────────────────────────────────────────────────────────
+// ── Field wrapper ────────────────────────────────────────────────────────────
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-      <label style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "#2d3748" }}>
-        {label}
-      </label>
+    <div className="field">
+      <label className="field-label">{label}</label>
       {children}
     </div>
   );
 }
 
-// ─── Info row ─────────────────────────────────────────────────────────────────
+// ── Info row ─────────────────────────────────────────────────────────────────
 function InfoRow({ title, desc, status, online = true }: {
   title: string; desc: string; status: string; online?: boolean;
 }) {
   return (
-    <div style={{
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
-      borderRadius: 10, padding: "13px 16px", gap: 16,
-    }}>
+    <div className="row">
       <div>
-        <div style={{ fontSize: 13.5, fontWeight: 500, color: "#e8edf5", marginBottom: 3 }}>{title}</div>
-        <div style={{ fontSize: 12, color: "#4a5568" }}>{desc}</div>
+        <div className="row-title">{title}</div>
+        <div className="row-desc">{desc}</div>
       </div>
       <StatusPill online={online} label={status} />
     </div>
   );
 }
 
-// ─── Toggle row ───────────────────────────────────────────────────────────────
+// ── Toggle row ───────────────────────────────────────────────────────────────
 function ToggleRow({ title, desc, checked, onChange }: {
   title: string; desc: string; checked: boolean; onChange: () => void;
 }) {
   return (
-    <div style={{
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
-      borderRadius: 10, padding: "13px 16px", gap: 16,
-    }}>
+    <div className="row">
       <div>
-        <div style={{ fontSize: 13.5, fontWeight: 500, color: "#e8edf5", marginBottom: 3 }}>{title}</div>
-        <div style={{ fontSize: 12, color: "#4a5568", lineHeight: 1.5 }}>{desc}</div>
+        <div className="row-title">{title}</div>
+        <div className="row-desc">{desc}</div>
       </div>
       <Toggle checked={checked} onChange={onChange} />
     </div>
   );
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
+// ── Main page ────────────────────────────────────────────────────────────────
 export default function SettingsPage() {
   const [storeName,            setStoreName]            = useState("AI Commerce Store");
   const [storeUrl,             setStoreUrl]             = useState("your-store.myshopify.com");
-  const [aiModel,              setAiModel]              = useState("GPT-4o Shopping");
+  const [aiModel,               setAiModel]              = useState("GPT-4o Shopping");
   const [scanFrequency,        setScanFrequency]        = useState("daily");
   const [semanticOptimization, setSemanticOptimization] = useState(true);
   const [notifications,        setNotifications]        = useState(true);
@@ -135,126 +91,250 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2500);
   };
 
-  const sharedInputStyle: React.CSSProperties = {
-    width: "100%", background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)", borderRadius: 9,
-    padding: "10px 14px", color: "#e8edf5",
-    fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, outline: "none",
-    transition: "border-color 0.15s",
-  };
-
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
-        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes blink  { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        @keyframes pop    { 0%{transform:scale(0.9);opacity:0} 60%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400&display=swap');
 
-        .sp-root {
-          width: 100%;
-          display: flex; flex-direction: column; gap: 24px;
-          font-family: 'DM Sans', sans-serif; color: #e8edf5;
-          animation: fadeUp 0.4s ease both;
+        :root {
+          --bg:         #111110;
+          --surface:    #1c1b1a;
+          --surface2:   #242321;
+          --surface3:   #2e2c2a;
+          --border:     rgba(255,255,255,0.07);
+          --border-mid: rgba(255,255,255,0.13);
+          --ink:        #f0ede8;
+          --ink2:       #8c8a83;
+          --ink3:       #504e49;
+          --green:      #3ecf8e;
+          --amber:      #e8a838;
+          --red:        #e05555;
+          --blue:       #8aa8e8;
+          --font-serif: 'DM Serif Display', serif;
+          --font:       'DM Sans', sans-serif;
+          --font-mono:  'DM Mono', monospace;
         }
 
-        /* Two-column grid for section pairs */
-        .sp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
-        @media(max-width: 900px) { .sp-grid { grid-template-columns: 1fr; } }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { background: var(--bg); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
 
-        /* select styling */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+        @keyframes pop    { 0% { transform: scale(0.92); opacity: 0; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+
+        .sp-root {
+          max-width: 1200px; margin: 0 auto;
+          padding: 40px 48px 80px;
+          display: flex; flex-direction: column; gap: 28px;
+          animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        /* ── page header ── */
+        .sp-hd { padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+        .sp-eyebrow {
+          font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+          text-transform: uppercase; color: var(--ink3); margin-bottom: 8px;
+        }
+        .sp-title {
+          font-family: var(--font-serif);
+          font-size: 32px; letter-spacing: -0.025em; line-height: 1.1; color: var(--ink);
+        }
+        .sp-sub { font-size: 14px; color: var(--ink2); margin-top: 6px; font-weight: 300; }
+
+        /* ── grid ── */
+        .sp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+
+        /* ── panel ── */
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        .panel-hd {
+          display: flex; align-items: center; gap: 13px;
+          padding: 18px 24px; border-bottom: 1px solid var(--border);
+        }
+        .panel-icon {
+          width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+          background: var(--surface2); border: 1px solid var(--border);
+          display: flex; align-items: center; justify-content: center; color: var(--ink2);
+        }
+        .panel-title { font-family: var(--font-serif); font-size: 16px; letter-spacing: -0.01em; color: var(--ink); }
+        .panel-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+        /* ── field ── */
+        .field { display: flex; flex-direction: column; gap: 8px; }
+        .field-label {
+          font-size: 11px; font-weight: 500; letter-spacing: 0.07em;
+          text-transform: uppercase; color: var(--ink3);
+        }
+        .sp-input {
+          width: 100%; background: var(--surface2);
+          border: 1px solid var(--border); border-radius: 9px;
+          padding: 10px 14px; color: var(--ink);
+          font-family: var(--font); font-size: 13.5px; outline: none;
+          transition: border-color 0.2s;
+        }
+        .sp-input::placeholder { color: var(--ink3); }
+        .sp-input:focus { border-color: var(--border-mid); }
+
         .sp-select {
-          width: 100%; background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08); border-radius: 9px;
-          padding: 10px 14px; color: #e8edf5;
-          font-family: 'DM Sans', sans-serif; font-size: 13.5px; outline: none;
-          transition: border-color 0.15s; cursor: pointer;
-          appearance: none;
-          background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          width: 100%; background: var(--surface2);
+          border: 1px solid var(--border); border-radius: 9px;
+          padding: 10px 14px; color: var(--ink);
+          font-family: var(--font); font-size: 13.5px; outline: none;
+          transition: border-color 0.2s; cursor: pointer; appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%238c8a83' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
           background-repeat: no-repeat; background-position: right 14px center;
           padding-right: 36px;
         }
-        .sp-select:focus { border-color: rgba(77,122,255,0.40); }
-        .sp-select option { background: #0b1120; color: #e8edf5; }
+        .sp-select:focus { border-color: var(--border-mid); }
+        .sp-select option { background: var(--surface); color: var(--ink); }
 
-        /* Save button */
+        /* ── info/toggle row ── */
+        .row {
+          display: flex; align-items: center; justify-content: space-between;
+          background: rgba(255,255,255,0.015); border: 1px solid var(--border);
+          border-radius: 11px; padding: 14px 16px; gap: 16px;
+        }
+        .row-title { font-size: 13.5px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+        .row-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; font-weight: 300; }
+
+        .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* ── toggle switch ── */
+        .toggle {
+          width: 42px; height: 24px; border-radius: 12px; flex-shrink: 0; border: 1px solid var(--border);
+          background: var(--surface3); position: relative; cursor: pointer;
+          transition: background 0.2s, border-color 0.2s; padding: 0;
+        }
+        .toggle.on { background: var(--green); border-color: var(--green); }
+        .toggle-knob {
+          position: absolute; top: 2px; left: 2px;
+          width: 18px; height: 18px; border-radius: 50%; background: var(--ink);
+          transition: left 0.2s cubic-bezier(0.16,1,0.3,1);
+        }
+        .toggle.on .toggle-knob { left: 21px; background: var(--bg); }
+
+        /* ── status pill ── */
+        .status-pill {
+          display: inline-flex; align-items: center; gap: 7px;
+          font-size: 12px; font-weight: 500; padding: 5px 13px;
+          border-radius: 100px; flex-shrink: 0;
+        }
+        .status-pill.online  { background: rgba(62,207,142,0.1);  border: 1px solid rgba(62,207,142,0.22);  color: var(--green); }
+        .status-pill.offline { background: rgba(224,85,85,0.1);   border: 1px solid rgba(224,85,85,0.22);   color: var(--red);   }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .status-pill.online .status-dot { animation: blink 2.2s ease infinite; }
+
+        /* ── save row ── */
+        .sp-save-row { display: flex; justify-content: flex-end; align-items: center; gap: 14px; }
         .sp-save-btn {
           display: inline-flex; align-items: center; gap: 8px;
-          background: #4d7aff; color: #fff; border: none;
-          font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500;
-          padding: 11px 28px; border-radius: 10px; cursor: pointer;
-          transition: opacity 0.15s, box-shadow 0.15s, background 0.2s;
+          background: var(--ink); color: var(--bg); border: none;
+          font-family: var(--font); font-size: 13.5px; font-weight: 500;
+          padding: 11px 26px; border-radius: 10px; cursor: pointer;
+          transition: opacity 0.2s, transform 0.2s, background 0.2s;
         }
-        .sp-save-btn:hover  { opacity: 0.87; box-shadow: 0 0 20px rgba(77,122,255,0.35); }
-        .sp-save-btn.saved  { background: #16b98c; box-shadow: 0 0 16px rgba(22,185,140,0.35); }
-
-        /* Toast */
+        .sp-save-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .sp-save-btn.saved { background: var(--green); color: var(--bg); }
         .sp-toast {
           display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(22,185,140,0.10); border: 1px solid rgba(22,185,140,0.25);
-          color: #16b98c; font-size: 12.5px; font-weight: 500;
-          padding: 8px 14px; border-radius: 100px;
+          background: rgba(62,207,142,0.1); border: 1px solid rgba(62,207,142,0.22);
+          color: var(--green); font-size: 12.5px; font-weight: 500;
+          padding: 8px 15px; border-radius: 100px;
           animation: pop 0.3s ease both;
         }
 
-        /* Danger zone */
-        .sp-danger {
-          background: #0b1120; border: 1px solid rgba(240,104,58,0.18);
-          border-radius: 14px; overflow: hidden;
-        }
+        /* ── danger zone ── */
+        .sp-danger { background: var(--surface); border: 1px solid rgba(224,85,85,0.18); border-radius: 16px; overflow: hidden; }
         .sp-danger-hd {
-          display: flex; align-items: center; gap: 12px;
-          padding: 16px 24px; border-bottom: 1px solid rgba(240,104,58,0.10);
+          display: flex; align-items: center; gap: 13px;
+          padding: 18px 24px; border-bottom: 1px solid rgba(224,85,85,0.15);
         }
-        .sp-danger-body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        @media(max-width:700px){ .sp-danger-body { grid-template-columns: 1fr; } }
+        .sp-danger-icon {
+          width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+          background: rgba(224,85,85,0.1); border: 1px solid rgba(224,85,85,0.22);
+          display: flex; align-items: center; justify-content: center; color: var(--red);
+        }
+        .sp-danger-title { font-family: var(--font-serif); font-size: 16px; letter-spacing: -0.01em; color: var(--red); }
+        .sp-danger-body { padding: 22px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .sp-danger-row {
           display: flex; align-items: center; justify-content: space-between;
-          background: rgba(240,104,58,0.03); border: 1px solid rgba(240,104,58,0.08);
-          border-radius: 10px; padding: 13px 16px; gap: 16px;
+          background: rgba(224,85,85,0.04); border: 1px solid rgba(224,85,85,0.1);
+          border-radius: 11px; padding: 14px 16px; gap: 16px;
         }
         .sp-danger-btn {
-          flex-shrink: 0; font-size: 12px; color: #f0683a; font-weight: 500;
-          background: rgba(240,104,58,0.08); border: 1px solid rgba(240,104,58,0.20);
-          border-radius: 7px; padding: 6px 14px; cursor: pointer;
-          font-family: 'DM Sans', sans-serif; transition: background 0.15s; white-space: nowrap;
+          flex-shrink: 0; font-size: 12px; color: var(--red); font-weight: 500;
+          background: rgba(224,85,85,0.08); border: 1px solid rgba(224,85,85,0.22);
+          border-radius: 8px; padding: 7px 15px; cursor: pointer;
+          font-family: var(--font); transition: background 0.2s; white-space: nowrap;
         }
-        .sp-danger-btn:hover { background: rgba(240,104,58,0.14); }
+        .sp-danger-btn:hover { background: rgba(224,85,85,0.16); }
+
+        /* ── responsive ── */
+        @media (max-width: 900px) {
+          .sp-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 700px) {
+          .sp-danger-body { grid-template-columns: 1fr; }
+          .toggle-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 680px) {
+          .sp-root { padding: 24px 20px 60px; gap: 24px; }
+          .sp-save-row { flex-direction: column-reverse; align-items: stretch; }
+          .sp-save-btn { justify-content: center; }
+          .row { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
       `}</style>
 
       <div className="sp-root">
 
+        {/* ── Page header ── */}
+        <div className="sp-hd">
+          <p className="sp-eyebrow">Configuration</p>
+          <h1 className="sp-title">Settings</h1>
+          <p className="sp-sub">Manage your store connection, AI engine, and optimization preferences</p>
+        </div>
+
         {/* ── Row 1: Store + AI Engine ── */}
         <div className="sp-grid">
 
-          <Section icon="🏪" title="Store Configuration">
-            <Field label="Store Name">
+          <Section
+            icon={
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M2 6l1-3.5h10L14 6M2 6v7a1 1 0 001 1h10a1 1 0 001-1V6M2 6h12M6 14v-4h4v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            }
+            title="Store configuration"
+          >
+            <Field label="Store name">
               <input
-                type="text" value={storeName} style={sharedInputStyle}
+                type="text" value={storeName} className="sp-input"
                 onChange={(e) => setStoreName(e.target.value)}
                 placeholder="Your store display name"
-                onFocus={(e) => (e.target.style.borderColor = "rgba(77,122,255,0.40)")}
-                onBlur={(e)  => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
               />
             </Field>
             <Field label="Shopify URL">
               <input
-                type="text" value={storeUrl} style={sharedInputStyle}
+                type="text" value={storeUrl} className="sp-input"
                 onChange={(e) => setStoreUrl(e.target.value)}
                 placeholder="your-store.myshopify.com"
-                onFocus={(e) => (e.target.style.borderColor = "rgba(77,122,255,0.40)")}
-                onBlur={(e)  => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
               />
             </Field>
             <InfoRow
-              title="Shopify Integration"
+              title="Shopify integration"
               desc="OAuth token active — product catalog syncing."
               status="Connected" online={true}
             />
           </Section>
 
-          <Section icon="🤖" title="AI Engine Configuration">
-            <Field label="Active AI Model">
+          <Section
+            icon={
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.3" />
+                <path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14M3.8 3.8l1.8 1.8M10.4 10.4l1.8 1.8M3.8 12.2l1.8-1.8M10.4 5.6l1.8-1.8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+              </svg>
+            }
+            title="AI engine configuration"
+          >
+            <Field label="Active AI model">
               <select className="sp-select" value={aiModel} onChange={(e) => setAiModel(e.target.value)}>
                 <option>GPT-4o Shopping</option>
                 <option>Gemini 1.5 Pro</option>
@@ -262,7 +342,7 @@ export default function SettingsPage() {
                 <option>Perplexity AI</option>
               </select>
             </Field>
-            <Field label="Scan Frequency">
+            <Field label="Scan frequency">
               <select className="sp-select" value={scanFrequency} onChange={(e) => setScanFrequency(e.target.value)}>
                 <option value="realtime">Real-time (on product update)</option>
                 <option value="daily">Daily</option>
@@ -271,12 +351,12 @@ export default function SettingsPage() {
               </select>
             </Field>
             <InfoRow
-              title="AI Engine Status"
+              title="AI engine status"
               desc="FastAPI semantic engine is operational."
               status="Online" online={true}
             />
             <InfoRow
-              title="Last Full Scan"
+              title="Last full scan"
               desc="All products re-indexed against active model."
               status="Just now" online={true}
             />
@@ -284,29 +364,36 @@ export default function SettingsPage() {
 
         </div>
 
-        {/* ── Row 2: Optimisation preferences (full width) ── */}
-        <Section icon="⚡" title="Optimisation Preferences">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        {/* ── Row 2: Optimisation preferences ── */}
+        <Section
+          icon={
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M9 1L3 9h4l-1 6 6-8H8l1-6z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+            </svg>
+          }
+          title="Optimisation preferences"
+        >
+          <div className="toggle-grid">
             <ToggleRow
-              title="Semantic Optimisation"
+              title="Semantic optimisation"
               desc="Automatically enhance semantic metadata on product pages."
               checked={semanticOptimization}
               onChange={() => setSemanticOptimization(!semanticOptimization)}
             />
             <ToggleRow
-              title="Auto Simulation"
+              title="Auto simulation"
               desc="Run AI agent simulations after each analysis cycle."
               checked={autoSimulation}
               onChange={() => setAutoSimulation(!autoSimulation)}
             />
             <ToggleRow
-              title="Auto Schema Injection"
+              title="Auto schema injection"
               desc="Push validated JSON-LD schema fixes directly to Shopify."
               checked={autoSchema}
               onChange={() => setAutoSchema(!autoSchema)}
             />
             <ToggleRow
-              title="Visibility Notifications"
+              title="Visibility notifications"
               desc="Receive alerts when AI visibility drops or issues appear."
               checked={notifications}
               onChange={() => setNotifications(!notifications)}
@@ -314,30 +401,30 @@ export default function SettingsPage() {
           </div>
         </Section>
 
-        {/* ── Row 3: Danger zone (full width) ── */}
+        {/* ── Row 3: Danger zone ── */}
         <div className="sp-danger">
           <div className="sp-danger-hd">
-            <div style={{
-              width: 34, height: 34, borderRadius: 9, fontSize: 16, flexShrink: 0,
-              background: "rgba(240,104,58,0.10)", border: "1px solid rgba(240,104,58,0.20)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>⚠️</div>
-            <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em", color: "#f0683a" }}>
-              Danger Zone
+            <div className="sp-danger-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1.5l6.5 11.5H1.5L8 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+                <path d="M8 6v3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                <circle cx="8" cy="11.5" r="0.6" fill="currentColor" />
+              </svg>
             </div>
+            <div className="sp-danger-title">Danger zone</div>
           </div>
           <div className="sp-danger-body">
             <div className="sp-danger-row">
               <div>
-                <div style={{ fontSize: 13.5, fontWeight: 500, color: "#e8edf5", marginBottom: 3 }}>Clear All Analyses</div>
-                <div style={{ fontSize: 12, color: "#4a5568" }}>Delete all cached AI analysis data. Cannot be undone.</div>
+                <div className="row-title">Clear all analyses</div>
+                <div className="row-desc">Delete all cached AI analysis data. Cannot be undone.</div>
               </div>
-              <button className="sp-danger-btn">Clear Data</button>
+              <button className="sp-danger-btn">Clear data</button>
             </div>
             <div className="sp-danger-row">
               <div>
-                <div style={{ fontSize: 13.5, fontWeight: 500, color: "#e8edf5", marginBottom: 3 }}>Disconnect Store</div>
-                <div style={{ fontSize: 12, color: "#4a5568" }}>Remove Shopify integration and revoke access tokens.</div>
+                <div className="row-title">Disconnect store</div>
+                <div className="row-desc">Remove Shopify integration and revoke access tokens.</div>
               </div>
               <button className="sp-danger-btn">Disconnect</button>
             </div>
@@ -345,12 +432,22 @@ export default function SettingsPage() {
         </div>
 
         {/* ── Save row ── */}
-        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 14, paddingBottom: 8 }}>
+        <div className="sp-save-row">
           {saved && (
-            <div className="sp-toast"><span>✓</span> Settings saved</div>
+            <div className="sp-toast">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M2.5 6.5l3 3 5-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Settings saved
+            </div>
           )}
           <button className={`sp-save-btn${saved ? " saved" : ""}`} onClick={handleSave}>
-            {saved ? "✓ Saved" : "Save Settings"}
+            {saved && (
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2.5 7l3 3 6-6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+            {saved ? "Saved" : "Save settings"}
           </button>
         </div>
 

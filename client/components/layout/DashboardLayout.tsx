@@ -12,8 +12,8 @@ export default function DashboardLayout({
         .dash-layout-root {
           display: flex;
           min-height: 100vh;
-          background: #04070f;
-          color: #e8edf5;
+          background: #111110;
+          color: #f0ede8;
         }
         .dash-layout-body {
           flex: 1;
@@ -23,7 +23,6 @@ export default function DashboardLayout({
         }
         .dash-layout-main {
           flex: 1;
-          padding: 32px;
           overflow-y: auto;
         }
       `}</style>
