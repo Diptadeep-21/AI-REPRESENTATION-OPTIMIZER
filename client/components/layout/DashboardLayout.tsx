@@ -1,5 +1,6 @@
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import { SidebarProvider } from "./SidebarContext";
 
 export default function DashboardLayout({
   children,
@@ -26,15 +27,17 @@ export default function DashboardLayout({
           overflow-y: auto;
         }
       `}</style>
-      <div className="dash-layout-root">
-        <Sidebar />
-        <div className="dash-layout-body">
-          <Navbar />
-          <main className="dash-layout-main">
-            {children}
-          </main>
+      <SidebarProvider>
+        <div className="dash-layout-root">
+          <Sidebar />
+          <div className="dash-layout-body">
+            <Navbar />
+            <main className="dash-layout-main">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+      </SidebarProvider>
     </>
   );
 }

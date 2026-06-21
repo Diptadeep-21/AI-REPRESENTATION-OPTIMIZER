@@ -60,7 +60,7 @@ function RadialScore({ value, color }: { value: number; color: string }) {
   const circ = 2 * Math.PI * r;
   const dash = (Math.min(value, 100) / 100) * circ;
   return (
-    <svg width="74" height="74" viewBox="0 0 74 74" style={{ flexShrink: 0 }}>
+    <svg className="radial-score" viewBox="0 0 74 74">
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--border)" strokeWidth={sw} />
       <circle
         cx={cx} cy={cy} r={r} fill="none"
@@ -238,12 +238,24 @@ export default function AnalysisPage() {
           display: flex; align-items: center; gap: 18px;
           padding: 20px 24px; cursor: pointer; flex-wrap: wrap;
         }
+        .radial-score { width: 74px; height: 74px; flex-shrink: 0; }
+        .av-card-top {
+          display: flex; align-items: center; gap: 18px;
+          flex: 1; min-width: 0;
+        }
         .av-card-info { flex: 1; min-width: 0; }
         .av-card-title {
           font-family: var(--font-serif); font-size: 17px;
           letter-spacing: -0.015em; color: var(--ink); margin-bottom: 4px;
+          overflow: hidden; text-overflow: ellipsis;
+          display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
         }
-        .av-card-sub { font-size: 12.5px; color: var(--ink3); font-weight: 300; }
+        .av-card-sub {
+          font-size: 12.5px; color: var(--ink3); font-weight: 300;
+          overflow: hidden; text-overflow: ellipsis;
+          display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
+        }
+        .av-card-meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
         .av-pill {
           font-size: 10.5px; font-weight: 500; padding: 3px 10px;
           border-radius: 100px; white-space: nowrap; flex-shrink: 0;
@@ -251,7 +263,7 @@ export default function AnalysisPage() {
         .av-issue-badge {
           font-size: 11.5px; color: var(--ink3); flex-shrink: 0;
           background: var(--surface2); border: 1px solid var(--border);
-          padding: 3px 10px; border-radius: 100px;
+          padding: 3px 10px; border-radius: 100px; white-space: nowrap;
         }
         .av-chevron { flex-shrink: 0; color: var(--ink3); transition: transform 0.25s; }
         .av-chevron.open { transform: rotate(180deg); }
@@ -344,10 +356,19 @@ export default function AnalysisPage() {
           .av-body { grid-template-columns: 1fr; }
         }
         @media (max-width: 680px) {
-          .av-root { padding: 24px 20px 60px; gap: 24px; }
+          .av-root { padding: 24px 16px 60px; gap: 24px; }
           .av-stats { grid-template-columns: 1fr; }
           .av-select { margin-left: 0 !important; width: 100%; }
-          .av-card-hd { gap: 12px; }
+
+          /* card header: ring+title on top row, pills wrap as their own row below */
+          .av-card-hd { padding: 16px; gap: 12px; }
+          .av-card-top { gap: 12px; }
+          .radial-score { width: 56px; height: 56px; }
+          .av-card-meta { width: 100%; padding-left: 0; }
+          .av-body { padding: 18px 16px; gap: 22px; }
+        }
+        @media (max-width: 460px) {
+          .av-card-hd { padding: 14px; }
         }
       `}</style>
 
@@ -433,27 +454,32 @@ export default function AnalysisPage() {
 
                   {/* Card header — always visible */}
                   <div className="av-card-hd" onClick={() => setExpanded(isOpen ? null : analysis._id)}>
-                    <RadialScore value={score} color={color} />
+                    <div className="av-card-top">
+                      <RadialScore value={score} color={color} />
 
-                    <div className="av-card-info">
-                      <div className="av-card-title">{analysis.productId?.title ?? "Untitled product"}</div>
-                      <div className="av-card-sub">
-                        {analysis.aiInsights?.summary
-                          ? analysis.aiInsights.summary.slice(0, 90) + (analysis.aiInsights.summary.length > 90 ? "…" : "")
-                          : "No summary available"}
+                      <div className="av-card-info">
+                        <div className="av-card-title">{analysis.productId?.title ?? "Untitled product"}</div>
+                        <div className="av-card-sub">
+                          {analysis.aiInsights?.summary
+                            ? analysis.aiInsights.summary.slice(0, 90) + (analysis.aiInsights.summary.length > 90 ? "…" : "")
+                            : "No summary available"}
+                        </div>
                       </div>
+
+                      <svg className={`av-chevron${isOpen ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </div>
 
-                    <span className="av-pill" style={{ background: labelBg, color }}>{label}</span>
-                    <span className="av-pill" style={{ background: priCfg.bg, color: priCfg.color }}>{priority}</span>
-                    <span className="av-issue-badge">
-                      {issueLen > 0 ? (
-                        <span style={{ color: "var(--red)" }}>{issueLen} issues</span>
-                      ) : "No issues"}
-                    </span>
-                    <svg className={`av-chevron${isOpen ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <div className="av-card-meta">
+                      <span className="av-pill" style={{ background: labelBg, color }}>{label}</span>
+                      <span className="av-pill" style={{ background: priCfg.bg, color: priCfg.color }}>{priority}</span>
+                      <span className="av-issue-badge">
+                        {issueLen > 0 ? (
+                          <span style={{ color: "var(--red)" }}>{issueLen} issues</span>
+                        ) : "No issues"}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Expanded body */}

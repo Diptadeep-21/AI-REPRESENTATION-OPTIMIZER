@@ -224,9 +224,14 @@ export default function ReportsPage() {
           display: flex; align-items: center; justify-content: center;
           font-size: 12px; color: var(--ink3); font-family: var(--font-mono);
         }
+        .rr-product-name-wrap { display: flex; align-items: center; gap: 13px; min-width: 0; }
         .rr-product-name { font-size: 13.5px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rr-product-priority-wrap { display: flex; align-items: center; }
         .rr-product-priority { font-size: 10.5px; font-weight: 500; padding: 3px 10px; border-radius: 100px; white-space: nowrap; width: fit-content; }
+        .rr-product-score-wrap { display: flex; align-items: center; }
         .rr-product-score { font-family: var(--font-serif); font-size: 20px; letter-spacing: -0.02em; }
+        .rr-product-action-wrap { display: flex; align-items: center; }
+        .rr-mobile-label { display: none; }
         .rr-fix-btn {
           font-size: 12px; color: var(--ink2); font-weight: 500;
           background: var(--surface2); border: 1px solid var(--border);
@@ -266,7 +271,24 @@ export default function ReportsPage() {
         @media (max-width: 760px) {
           .rr-readiness { flex-direction: column; align-items: flex-start; gap: 24px; }
           .rr-thead { display: none; }
-          .rr-product-row { grid-template-columns: 1fr; gap: 10px; }
+
+          .rr-product-row {
+            grid-template-columns: 1fr;
+            gap: 0; padding: 16px;
+          }
+          .rr-product-name-wrap { margin-bottom: 14px; }
+          .rr-product-priority-wrap,
+          .rr-product-score-wrap,
+          .rr-product-action-wrap {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-top: 1px solid var(--border);
+          }
+          .rr-product-action-wrap { border-top: 1px solid var(--border); margin-top: 4px; }
+          .rr-mobile-label {
+            display: inline-block; font-size: 11px; color: var(--ink3);
+            font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+          }
+          .rr-fix-btn { width: auto; }
         }
         @media (max-width: 680px) {
           .rr-root { padding: 24px 20px 60px; gap: 24px; }
@@ -438,17 +460,21 @@ export default function ReportsPage() {
                   "var(--red)";
                 return (
                   <div className="rr-product-row" key={i}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 13, minWidth: 0 }}>
+                    <div className="rr-product-name-wrap">
                       <div className="rr-product-id">{i + 1}</div>
                       <span className="rr-product-name">{product.title}</span>
                     </div>
-                    <div>
+                    <div className="rr-product-priority-wrap">
+                      <span className="rr-mobile-label">Priority</span>
                       <span className="rr-product-priority" style={{ background: priCfg.bg, color: priCfg.color }}>
                         {pri}
                       </span>
                     </div>
-                    <div className="rr-product-score" style={{ color: sColor }}>{score}</div>
-                    <div>
+                    <div className="rr-product-score-wrap">
+                      <span className="rr-mobile-label">Score</span>
+                      <span className="rr-product-score" style={{ color: sColor }}>{score}</span>
+                    </div>
+                    <div className="rr-product-action-wrap">
                       <button className="rr-fix-btn">
                         Fix
                         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style={{ marginLeft: 5, display: "inline" }}>

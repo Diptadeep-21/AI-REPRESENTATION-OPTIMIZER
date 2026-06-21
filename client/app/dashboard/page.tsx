@@ -289,8 +289,9 @@ export default function DashboardPage() {
           font-size: 13px; font-weight: 500; font-family: var(--font);
           padding: 8px 16px; border-radius: 9px; cursor: pointer;
           transition: opacity 0.2s, transform 0.2s, border-color 0.2s, color 0.2s;
-          border: none;
+          border: none; white-space: nowrap; overflow: hidden;
         }
+        .hd-btn span { overflow: hidden; text-overflow: ellipsis; }
         .hd-btn:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
         .hd-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
         .hd-btn.ghost {
@@ -462,10 +463,57 @@ export default function DashboardPage() {
           .two-col { grid-template-columns: 1fr; }
           .scores-grid, .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
+
+        @media (max-width: 900px) {
+          .db { padding: 32px 28px 60px; }
+        }
+
         @media (max-width: 680px) {
-          .db { padding: 24px 20px 60px; gap: 28px; }
-          .page-hd { flex-direction: column; gap: 20px; align-items: flex-start; }
+          .db { padding: 20px 16px 48px; gap: 24px; }
+
+          /* page header stacks, actions become a full-width row of equal buttons */
+          .page-hd {
+            flex-direction: column; align-items: stretch; gap: 16px;
+            padding-bottom: 20px;
+          }
+          .page-title { font-size: 26px; }
+          .page-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; width: 100%; }
+          .hd-btn { justify-content: center; padding: 10px 8px; font-size: 12px; }
+          .hd-btn span, .hd-btn svg { flex-shrink: 0; }
+
+          /* alert banner wraps cleanly instead of overflowing */
+          .alert {
+            flex-wrap: wrap; padding: 12px 14px; gap: 8px;
+          }
+          .alert-cta { margin-left: 0; width: 100%; text-align: right; }
+
+          /* stat + score grids go single column */
           .scores-grid, .stats-row { grid-template-columns: 1fr; }
+          .stat-card { padding: 18px 20px; }
+          .stat-val { font-size: 32px; }
+
+          /* issue rows: drop the fixed action button to its own line */
+          .issue-row {
+            flex-wrap: wrap; padding: 14px 16px; gap: 10px;
+          }
+          .issue-info { width: 100%; order: 1; }
+          .issue-sev { order: 0; }
+          .issue-btn { order: 2; margin-left: auto; }
+
+          /* product rows: let name truncate, keep score+status inline */
+          .product-row { padding: 12px 16px; gap: 10px; }
+          .product-name { font-size: 13px; }
+          .product-score { font-size: 16px; }
+
+          .panel-body { padding: 18px 16px; }
+
+          /* trend + category headers shouldn't overflow */
+          .trend-val { font-size: 32px; }
+        }
+
+        @media (max-width: 380px) {
+          .page-actions { grid-template-columns: 1fr 1fr; }
+          .page-actions .hd-btn:last-child { grid-column: span 2; }
         }
       `}</style>
 

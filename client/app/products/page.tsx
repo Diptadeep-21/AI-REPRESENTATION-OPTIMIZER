@@ -227,6 +227,10 @@ export default function ProductsPage() {
 
         .pp-num { font-family: var(--font-serif); font-size: 16px; }
 
+        .pp-cell { display: flex; align-items: center; }
+        .pp-cell-action { justify-content: flex-start; }
+        .pp-mobile-label { display: none; }
+
         .pp-action {
           display: inline-flex; align-items: center; gap: 6px;
           font-size: 12px; font-weight: 500; font-family: var(--font);
@@ -247,14 +251,27 @@ export default function ProductsPage() {
           .pp-thead > div:nth-child(4), .pp-row > div:nth-child(5) { display: none; }
         }
         @media (max-width: 680px) {
-          .pp-root { padding: 24px 20px 60px; gap: 24px; }
+          .pp-root { padding: 24px 16px 60px; gap: 24px; }
           .pp-hd { flex-direction: column; align-items: flex-start; gap: 16px; }
           .pp-stats { grid-template-columns: 1fr; }
           .pp-reanalyze { margin-left: 0; width: 100%; justify-content: center; }
           .pp-thead { display: none; }
+
           .pp-row {
             grid-template-columns: 1fr;
-            gap: 10px; padding: 16px;
+            gap: 0; padding: 16px;
+          }
+          .pp-product { margin-bottom: 14px; }
+
+          /* every stat cell becomes a labeled row: label on the left, value on the right */
+          .pp-cell {
+            justify-content: space-between;
+            padding: 10px 0; border-top: 1px solid var(--border);
+          }
+          .pp-cell-action { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 14px; }
+          .pp-mobile-label {
+            display: inline-block; font-size: 11px; color: var(--ink3);
+            font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
           }
         }
       `}</style>
@@ -355,29 +372,40 @@ export default function ProductsPage() {
                       <span className="pp-name">{product.title}</span>
                     </div>
 
-                    <div><ScoreRing score={product.overallScore ?? 0} /></div>
+                    <div className="pp-cell">
+                      <span className="pp-mobile-label">Score</span>
+                      <ScoreRing score={product.overallScore ?? 0} />
+                    </div>
 
-                    <div>
+                    <div className="pp-cell">
+                      <span className="pp-mobile-label">Status</span>
                       <span className="pp-pill" style={{ background: statusCfg.bg, color: statusCfg.color }}>
                         {statusCfg.label}
                       </span>
                     </div>
 
-                    <div className="pp-num" style={{ color: product.issuesCount > 0 ? "var(--red)" : "var(--ink3)" }}>
-                      {product.issuesCount ?? 0}
+                    <div className="pp-cell">
+                      <span className="pp-mobile-label">Issues</span>
+                      <span className="pp-num" style={{ color: product.issuesCount > 0 ? "var(--red)" : "var(--ink3)" }}>
+                        {product.issuesCount ?? 0}
+                      </span>
                     </div>
 
-                    <div className="pp-num" style={{ color: product.recommendationCount > 0 ? "var(--amber)" : "var(--ink3)" }}>
-                      {product.recommendationCount ?? 0}
+                    <div className="pp-cell">
+                      <span className="pp-mobile-label">Recs</span>
+                      <span className="pp-num" style={{ color: product.recommendationCount > 0 ? "var(--amber)" : "var(--ink3)" }}>
+                        {product.recommendationCount ?? 0}
+                      </span>
                     </div>
 
-                    <div>
+                    <div className="pp-cell">
+                      <span className="pp-mobile-label">Priority</span>
                       <span className="pp-pill" style={{ background: `${priorityCfg.color}18`, color: priorityCfg.color }}>
                         {product.improvementPriority ?? "—"}
                       </span>
                     </div>
 
-                    <div>
+                    <div className="pp-cell pp-cell-action">
                       <Link href={`/products/${product.productId}`}>
                         <button className="pp-action">
                           Optimize

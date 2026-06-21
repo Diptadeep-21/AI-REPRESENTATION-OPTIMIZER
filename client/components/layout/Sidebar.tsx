@@ -12,9 +12,11 @@ import {
   Settings,
   ChevronRight,
   Lightbulb,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { setupDemoWorkspace } from "@/services/demoService";
+import { useSidebar } from "./SidebarContext";
 
 const links = [
   { title: "Overview",        href: "/dashboard",        icon: LayoutDashboard, section: "main" },
@@ -30,6 +32,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { mobileOpen, closeSidebar } = useSidebar();
 
   const { data: analyses } = useQuery({
     queryKey: ["analyses"],
@@ -90,6 +93,15 @@ export default function Sidebar() {
           --font:       'DM Sans', sans-serif;
         }
 
+        /* ── backdrop (mobile only) ── */
+        .sidebar-backdrop {
+          position: fixed; inset: 0; z-index: 39;
+          background: rgba(0,0,0,0.55);
+          opacity: 0; pointer-events: none;
+          transition: opacity 0.25s ease;
+        }
+        .sidebar-backdrop.open { opacity: 1; pointer-events: auto; }
+
         .sidebar-root {
           width: 232px; flex-shrink: 0;
           background: var(--bg); border-right: 1px solid var(--border);
@@ -98,7 +110,10 @@ export default function Sidebar() {
         }
         .sidebar-root::-webkit-scrollbar { width: 0; }
 
-        .sidebar-logo { padding: 20px 22px; border-bottom: 1px solid var(--border); }
+        .sidebar-logo {
+          padding: 20px 22px; border-bottom: 1px solid var(--border);
+          display: flex; align-items: center; justify-content: space-between;
+        }
         .logo-text {
           font-family: var(--font-serif); font-size: 19px;
           letter-spacing: -0.02em; color: var(--ink); line-height: 1;
@@ -106,6 +121,14 @@ export default function Sidebar() {
         .logo-sub-row { display: flex; align-items: center; gap: 7px; margin-top: 9px; }
         .logo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
         .logo-sub { font-family: var(--font); font-size: 11px; color: var(--ink3); letter-spacing: 0.02em; font-weight: 300; }
+
+        .sidebar-close-btn {
+          display: none;
+          width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+          background: var(--surface); border: 1px solid var(--border);
+          align-items: center; justify-content: center;
+          color: var(--ink2); cursor: pointer;
+        }
 
         .sidebar-nav {
           flex: 1; min-height: 0; padding: 10px 12px;
@@ -122,7 +145,7 @@ export default function Sidebar() {
 
         .nav-item {
           display: flex; align-items: center; gap: 10px;
-          padding: 9px 12px; border-radius: 9px;
+          padding: 10px 12px; border-radius: 9px;
           font-family: var(--font); font-size: 13.5px; font-weight: 500;
           color: var(--ink2); text-decoration: none;
           border: 1px solid transparent;
@@ -165,15 +188,35 @@ export default function Sidebar() {
         }
         .store-url { font-size: 11px; color: var(--ink3); margin-top: 2px; font-weight: 300; }
         .store-status { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+        /* ── MOBILE: drawer mode ── */
+        @media (max-width: 900px) {
+          .sidebar-root {
+            position: fixed; top: 0; left: 0; z-index: 40;
+            height: 100vh; height: 100dvh;
+            transform: translateX(-100%);
+            transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+          }
+          .sidebar-root.open { transform: translateX(0); }
+          .sidebar-close-btn { display: flex; }
+        }
       `}</style>
 
-      <aside className="sidebar-root">
+      <div className={`sidebar-backdrop${mobileOpen ? " open" : ""}`} onClick={closeSidebar} />
+
+      <aside className={`sidebar-root${mobileOpen ? " open" : ""}`}>
         <div className="sidebar-logo">
-          <div className="logo-text">Merchanta AI</div>
-          <div className="logo-sub-row">
-            <span className="logo-dot" />
-            <span className="logo-sub">AI Commerce Intelligence</span>
+          <div>
+            <div className="logo-text">Merchanta AI</div>
+            <div className="logo-sub-row">
+              <span className="logo-dot" />
+              <span className="logo-sub">AI Commerce Intelligence</span>
+            </div>
           </div>
+          <button className="sidebar-close-btn" onClick={closeSidebar} aria-label="Close menu">
+            <X size={16} />
+          </button>
         </div>
 
         <nav className="sidebar-nav">

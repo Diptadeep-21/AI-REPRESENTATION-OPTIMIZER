@@ -1,9 +1,10 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Bell, RefreshCw, LogOut } from "lucide-react";
+import { Bell, RefreshCw, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
+import { useSidebar } from "./SidebarContext";
 
 const PAGE_META: Record<string, { title: string; sub: string }> = {
   "/dashboard":   { title: "AI Commerce Overview", sub: "Monitor how AI shopping agents perceive your store" },
@@ -18,6 +19,7 @@ export default function Navbar() {
   const router = useRouter();
   const [scanning, setScanning] = useState(false);
   const { user, logout } = useAuth();
+  const { toggleSidebar } = useSidebar();
 
   const meta = PAGE_META[pathname] ?? { title: "AI Optimizer", sub: "AI Commerce Intelligence" };
 
@@ -60,10 +62,21 @@ export default function Navbar() {
           background: rgba(17,17,16,0.85);
           backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
           position: sticky; top: 0; z-index: 20;
-          gap: 24px;
+          gap: 16px;
         }
 
-        .navbar-left { min-width: 0; }
+        .navbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; flex: 1; }
+
+        .hamburger-btn {
+          display: none;
+          width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+          background: var(--surface); border: 1px solid var(--border);
+          align-items: center; justify-content: center;
+          color: var(--ink2); cursor: pointer; transition: border-color 0.2s, color 0.2s;
+        }
+        .hamburger-btn:hover { border-color: var(--border-mid); color: var(--ink); }
+
+        .navbar-title-wrap { min-width: 0; }
         .navbar-title {
           font-family: var(--font-serif); font-size: 21px;
           letter-spacing: -0.02em; color: var(--ink); line-height: 1.2;
@@ -90,7 +103,7 @@ export default function Navbar() {
           font-family: var(--font); font-size: 12.5px; font-weight: 500;
           border-radius: 9px; padding: 8px 15px; cursor: pointer;
           transition: border-color 0.2s, color 0.2s, transform 0.2s, background 0.2s;
-          white-space: nowrap;
+          white-space: nowrap; border: none;
         }
         .nb-btn.ghost {
           background: transparent; border: 1px solid var(--border); color: var(--ink2);
@@ -134,16 +147,30 @@ export default function Navbar() {
         @keyframes spin { to { transform: rotate(360deg); } }
         .spinning { animation: spin 0.8s linear infinite; }
 
+        /* ── tablet ── */
+        @media (max-width: 900px) {
+          .hamburger-btn { display: flex; }
+        }
+
+        /* ── mobile ── */
         @media (max-width: 720px) {
-          .navbar-root { padding: 0 20px; }
-          .navbar-sub, .sync-pill, .user-text { display: none; }
+          .navbar-root { padding: 0 16px; height: 64px; gap: 10px; }
+          .navbar-sub, .sync-pill, .user-text, .nb-divider { display: none; }
+          .nb-btn span { display: none; }
+          .nb-btn.ghost { width: 36px; height: 36px; padding: 0; justify-content: center; }
+          .navbar-title { font-size: 17px; }
         }
       `}</style>
 
       <header className="navbar-root">
         <div className="navbar-left">
-          <div className="navbar-title">{meta.title}</div>
-          <div className="navbar-sub">{meta.sub}</div>
+          <button className="hamburger-btn" onClick={toggleSidebar} aria-label="Open menu">
+            <Menu size={18} />
+          </button>
+          <div className="navbar-title-wrap">
+            <div className="navbar-title">{meta.title}</div>
+            <div className="navbar-sub">{meta.sub}</div>
+          </div>
         </div>
 
         <div className="navbar-right">
@@ -154,7 +181,7 @@ export default function Navbar() {
 
           <button className="nb-btn ghost" onClick={handleScan}>
             <RefreshCw size={13} className={scanning ? "spinning" : ""} />
-            {scanning ? "Scanning…" : "Re-scan"}
+            <span>{scanning ? "Scanning…" : "Re-scan"}</span>
           </button>
 
           <div className="nb-divider" />
