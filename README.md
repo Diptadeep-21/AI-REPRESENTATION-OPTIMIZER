@@ -171,6 +171,63 @@ Merchants interact through:
 
 ---
 
+# Screenshots
+
+## Landing Page
+
+### Hero Section
+
+![Landing Page](screenshots/home_landing1.png)
+
+### Workflow Section
+
+![Workflow](screenshots/home_workflow1.png)
+
+### Pricing Section
+
+![Pricing](screenshots/home_pricing.png)
+
+---
+
+# Dashboard
+
+![Dashboard Scores](screenshots/dashboard.png)
+
+---
+
+# Product Intelligence
+
+## Products Page
+
+![Products](screenshots/products.png)
+
+## Product Recommendations
+
+![Recommendations](screenshots/recommendations.png)
+
+## AI Visibility Analysis
+
+![AI Visibility](screenshots/ai_visibility.png)
+
+---
+
+# Buyer Intent Simulation
+
+![Simulation](screenshots/simulation.png)
+
+---
+
+# Reports & Settings
+
+## Reports
+
+![Reports](screenshots/reports.png)
+
+## Settings
+
+![Settings](screenshots/settings.png)
+
+
 # Tech Stack
 
 | Layer | Technology |
@@ -516,76 +573,6 @@ AI-REPRESENTATION-OPTIMIZER/
 
 ---
 
-# Screenshots
-
-## Landing Page
-
-### Hero Section
-
-![Landing Page](screenshots/home_landing.png)
-
-### Features Section
-
-![Features](screenshots/home_features.png)
-
-### Workflow Section
-
-![Workflow](screenshots/home_workflow.png)
-
-### Pricing Section
-
-![Pricing](screenshots/home_pricing.png)
-
----
-
-# Authentication
-
-## Login Page
-
-![Login](screenshots/login.png)
-
-## Register Page
-
-![Register](screenshots/register.png)
-
----
-
-# Dashboard
-
-## Dashboard Scores
-
-![Dashboard Scores](screenshots/dashboard_scores.png)
-
-## Open Issues
-
-![Dashboard Issues](screenshots/dashboard_open_issues.png)
-
-## Top Products
-
-![Top Products](screenshots/dashboard_top_products.png)
-
----
-
-# Product Intelligence
-
-## Products Page
-
-![Products](screenshots/products.png)
-
-## Product Recommendations
-
-![Recommendations](screenshots/product_recommendations.png)
-
-## AI Visibility Analysis
-
-![AI Visibility](screenshots/ai_visibility_product.png)
-
----
-
-# Buyer Intent Simulation
-
-![Simulation](screenshots/simulation.png)
-
 Merchanta AI dynamically simulates how AI shopping systems rank products based on buyer intent.
 
 The simulation engine adapts ranking logic based on:
@@ -595,34 +582,6 @@ The simulation engine adapts ranking logic based on:
 - buyer behavior
 - commerce context
 - AI discoverability
-
----
-
-# Optimization Insights
-
-## Product Optimization Recommendations
-
-![Optimization 1](screenshots/optimize_product1.png)
-
-![Optimization 2](screenshots/optimize_product2.png)
-
-## Recommendations Dashboard
-
-![Recommendations Dashboard](screenshots/recommendations.png)
-
----
-
-# Reports & Settings
-
-## Reports
-
-![Reports](screenshots/reports.png)
-
-## Settings
-
-![Settings Top](screenshots/settings_top.png)
-
-![Settings Bottom](screenshots/settings_bottom.png)
 
 ---
 
