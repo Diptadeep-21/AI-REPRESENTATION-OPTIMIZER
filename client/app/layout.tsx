@@ -15,10 +15,17 @@ from "@/providers/AuthProvider";
 export const metadata: Metadata = {
 
   title:
-    "AI Representation Optimizer",
+    "Merchanta AI",
 
   description:
     "Understand how AI shopping agents perceive and rank your store.",
+
+  icons: {
+    icon: "/logo.ico",
+    shortcut: "/logo.ico",
+    apple: "/logo.ico",
+  },
+
 };
 
 export default function RootLayout({
